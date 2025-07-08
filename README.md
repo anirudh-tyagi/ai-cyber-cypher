@@ -10,68 +10,6 @@
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://python.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC.svg)](https://tailwindcss.com/)
 
-## 📸 Application Screenshots
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <img src="./screenshots/dashboard-overview.png" alt="Dashboard Overview" width="400px" />
-        <br /><em>🎛️ Main Dashboard Interface</em>
-      </td>
-      <td align="center">
-        <img src="./screenshots/cipher-engine.png" alt="Cipher Engine" width="400px" />
-        <br /><em>⚙️ Cipher Engine Operations</em>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">
-        <img src="./screenshots/security-analysis.png" alt="Security Analysis" width="400px" />
-        <br /><em>🛡️ Security Analysis Dashboard</em>
-      </td>
-      <td align="center">
-        <img src="./screenshots/data-visualization.png" alt="Data Visualization" width="400px" />
-        <br /><em>📊 Interactive Data Visualizations</em>
-      </td>
-    </tr>
-  </table>
-</div>
-
-## � Live Demo
-
-**🌐 [View Live Application](https://your-app-name.vercel.app)** - *Deployed on Vercel*
-
----
-
-## 📸 Screenshots
-
-<div align="center">
-  <table>
-    <tr>
-      <td width="50%">
-        <img src="screenshots/1.png" alt="Main Dashboard" width="100%"/>
-        <p align="center"><em>Main Dashboard Interface</em></p>
-      </td>
-      <td width="50%">
-        <img src="screenshots/2.png" alt="Key Generator" width="100%"/>
-        <p align="center"><em>Encryption/Decryption Engine</em></p>
-      </td>
-    </tr>
-    <tr>
-      <td width="50%">
-        <img src="screenshots/3.png" alt="Cipher Engine" width="100%"/>
-        <p align="center"><em>Security Analyzer</em></p>
-      </td>
-      <td width="50%">
-        <img src="screenshots/4.png" alt="3" width="100%"/>
-        <p align="center"><em>Interactive Analytics Dashboard</em></p>
-      </td>
-    </tr>
-  </table>
-</div>
-
----
-
 CyberCipher is a comprehensive cryptographic analysis platform that combines modern web technologies with advanced cryptographic algorithms. Built with React/TypeScript frontend and FastAPI backend, it provides real-time encryption/decryption, security analysis, and interactive visualizations for understanding cipher behavior and security metrics.
 
 ### 🎯 Key Features
