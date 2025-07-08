@@ -63,7 +63,7 @@
         <p align="center"><em>Security Analyzer</em></p>
       </td>
       <td width="50%">
-        <img src="screenshots/analytics.png" alt="3" width="100%"/>
+        <img src="4.png" alt="3" width="100%"/>
         <p align="center"><em>Interactive Analytics Dashboard</em></p>
       </td>
     </tr>
