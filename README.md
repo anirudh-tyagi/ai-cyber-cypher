@@ -49,22 +49,22 @@
   <table>
     <tr>
       <td width="50%">
-        <img src="screenshots/dashboard.png" alt="Main Dashboard" width="100%"/>
-        <p align="center"><em>🎛️ Main Dashboard Interface</em></p>
+        <img src="screenshots/1.png" alt="Main Dashboard" width="100%"/>
+        <p align="center"><em>Main Dashboard Interface</em></p>
       </td>
       <td width="50%">
-        <img src="screenshots/key-generator.png" alt="Key Generator" width="100%"/>
-        <p align="center"><em>🔑 Advanced Key Generation</em></p>
+        <img src="screenshots/2.png" alt="Key Generator" width="100%"/>
+        <p align="center"><em>Encryption/Decryption Engine</em></p>
       </td>
     </tr>
     <tr>
       <td width="50%">
-        <img src="screenshots/cipher-engine.png" alt="Cipher Engine" width="100%"/>
-        <p align="center"><em>⚙️ Encryption/Decryption Engine</em></p>
+        <img src="screenshots/3.png" alt="Cipher Engine" width="100%"/>
+        <p align="center"><em>Security Analyzer</em></p>
       </td>
       <td width="50%">
-        <img src="screenshots/analytics.png" alt="Analytics Dashboard" width="100%"/>
-        <p align="center"><em>📊 Interactive Analytics Dashboard</em></p>
+        <img src="screenshots/analytics.png" alt="3" width="100%"/>
+        <p align="center"><em>Interactive Analytics Dashboard</em></p>
       </td>
     </tr>
   </table>
@@ -494,7 +494,7 @@ Response:
 2. **Create GitHub Repository**
    ```bash
    # Create repository on GitHub, then:
-   git remote add origin https://github.com/yourusername/cybercypher.git
+   git remote add origin https://github.com/anirudh-tyagi/cybercypher.git
    git branch -M main
    git push -u origin main
    ```
@@ -619,16 +619,6 @@ VITE_API_URL=https://your-api-domain.com
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our contributing guidelines:
-
-1. **🍴 Fork the repository**
-2. **🌿 Create a feature branch**
-3. **✅ Add tests for new features**
-4. **📝 Update documentation**
-5. **🔄 Submit a pull request**
-
 ### **Development Setup**
 ```bash
 # Install dependencies
@@ -645,30 +635,3 @@ python main.py     # Backend
 ```
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🆘 Support & Documentation
-
-- **📖 Full Documentation**: Available in `/docs`
-- **🐛 Issue Tracking**: GitHub Issues
-- **💬 Discussions**: GitHub Discussions
-- **📧 Contact**: [your-email@domain.com]
-
----
-
-## 🙏 Acknowledgments
-
-- **React Team** for the amazing framework
-- **FastAPI Team** for the excellent Python framework
-- **Recharts** for beautiful chart components
-- **Tailwind CSS** for the utility-first CSS framework
-- **Framer Motion** for smooth animations
-
----
-
-**Built with ❤️ for the cybersecurity community**
