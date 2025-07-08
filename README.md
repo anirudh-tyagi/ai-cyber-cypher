@@ -58,30 +58,6 @@ CyberCipher is a comprehensive cryptographic analysis platform that combines mod
 
 ---
 
-## 🏗️ Architecture Overview
-
-```
-CyberCipher/
-├── 🎨 Frontend (React/TypeScript)
-│   ├── 🖥️  Modern Dashboard Interface
-│   ├── 📊 Interactive Data Visualizations
-│   ├── 🔧 Modular Component Architecture
-│   └── 🎯 Real-time State Management
-│
-├── ⚙️  Backend (FastAPI/Python)
-│   ├── 🔐 Cryptographic Operations
-│   ├── 📈 Security Analysis Engine
-│   ├── 🔑 Key Generation Services
-│   └── 📡 RESTful API Endpoints
-│
-└── 🔗 Integration Layer
-    ├── 🌐 HTTP API Communication
-    ├── 🔄 Real-time Data Sync
-    └── ❌ Error Handling & Fallbacks
-```
-
----
-
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -95,7 +71,7 @@ CyberCipher/
 
 1. **Clone the Repository**
    ```bash
-   git clone <repository-url>
+   git clone <https://github.com/anirudh-tyagi/ai-cyber-cypher>
    cd ai-cyber-cypher
    ```
 
