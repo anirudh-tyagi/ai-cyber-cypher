@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
-import { Activity, BarChart3, PieChart as PieChartIcon, TrendingUp, Shield, Lock, Eye, AlertTriangle } from 'lucide-react'
+import { Activity, BarChart3, PieChart as PieChartIcon, TrendingUp, Shield, Eye, AlertTriangle } from 'lucide-react'
 import { CipherState } from '../types/cipher'
 import { Card, CardContent, CardHeader } from './ui/Card'
-import { Badge } from './ui/Badge'
 import { StatCard } from './ui/StatCard'
 import { Button } from './ui/Button'
 import { apiClient } from '../services/apiClient'
@@ -155,7 +153,7 @@ const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({ cipherState }) =>
   }
 
   const detectPatterns = (text: string): string[] => {
-    const patterns = []
+    const patterns: string[] = []
     const chunks = text.match(/.{1,4}/g) || []
     const frequency: { [key: string]: number } = {}
     

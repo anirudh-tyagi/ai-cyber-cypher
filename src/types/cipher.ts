@@ -57,6 +57,7 @@ export interface AIPrediction {
   confidence: number
   description: string
   impact: 'low' | 'medium' | 'high' | 'critical'
+  risk: 'low' | 'medium' | 'high'
 }
 
 export interface Vulnerability {

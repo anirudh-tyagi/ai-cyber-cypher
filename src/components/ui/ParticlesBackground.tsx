@@ -19,16 +19,9 @@ interface ParticlesBackgroundProps {
 
 const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
   particleCount = 80,
-  particleSpread = 10,
   speed = 0.1,
   particleColors,
-  moveParticlesOnHover = true,
-  particleHoverFactor = 1,
   alphaParticles = false,
-  particleBaseSize = 100,
-  sizeRandomness = 1,
-  cameraDistance = 20,
-  disableRotation = false,
   className = "",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);

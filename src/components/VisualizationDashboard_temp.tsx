@@ -247,7 +247,7 @@ const VisualizationDashboard: React.FC<VisualizationDashboardProps> = ({ cipherS
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {bitDistribution.map((entry, index) => (
+                      {bitDistribution.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>

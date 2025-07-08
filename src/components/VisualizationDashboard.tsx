@@ -101,7 +101,7 @@ const VisualizationDashboard: React.FC<VisualizationDashboardProps> = ({ cipherS
 
   // Custom label renderer for better visibility
   const renderCustomizedLabel = ({
-    cx, cy, midAngle, innerRadius, outerRadius, bit, percentage
+    cx, cy, midAngle, outerRadius, bit, percentage
   }: any) => {
     const RADIAN = Math.PI / 180;
     // Position labels outside the pie chart for better visibility

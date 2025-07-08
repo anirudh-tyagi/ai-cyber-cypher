@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Brain, Shield, AlertTriangle, TrendingUp, Eye, Play, CheckCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { CipherState, AnalysisResults } from '../types/cipher'
+import { CipherState, AnalysisResults, FrequencyData } from '../types/cipher'
 import { analyzeText, predictVulnerabilities, calculateSecurityScore } from '../utils/aiAnalysis'
 import { Card, CardContent, CardHeader } from './ui/Card'
 import { Button } from './ui/Button'
@@ -62,7 +62,7 @@ const AIAnalyzer: React.FC<AIAnalyzerProps> = ({ cipherState, onAnalysisComplete
         strength: securityScore,
         aiPredictions,
         vulnerabilities: [],
-        recommendations: generateRecommendations(securityScore, aiPredictions)
+        recommendations: generateRecommendations(securityScore.overall, aiPredictions)
       }
 
       setResults(analysisResults)
@@ -97,7 +97,7 @@ const AIAnalyzer: React.FC<AIAnalyzerProps> = ({ cipherState, onAnalysisComplete
     return Math.round(entropy * 100) / 100
   }
 
-  const calculateFrequencyAnalysis = (text: string) => {
+  const calculateFrequencyAnalysis = (text: string): FrequencyData[] => {
     const freq: { [key: string]: number } = {}
     for (const char of text) {
       freq[char] = (freq[char] || 0) + 1
@@ -106,10 +106,11 @@ const AIAnalyzer: React.FC<AIAnalyzerProps> = ({ cipherState, onAnalysisComplete
     return Object.entries(freq)
       .map(([character, count]) => ({
         character,
-        count,
-        frequency: Math.round((count / text.length) * 100 * 100) / 100
+        frequency: Math.round((count / text.length) * 100 * 100) / 100,
+        expected: 100 / Object.keys(freq).length, // Expected frequency if uniform
+        deviation: Math.abs((count / text.length) * 100 - (100 / Object.keys(freq).length))
       }))
-      .sort((a, b) => b.count - a.count)
+      .sort((a, b) => b.frequency - a.frequency)
       .slice(0, 10)
   }
 
@@ -198,7 +199,7 @@ const AIAnalyzer: React.FC<AIAnalyzerProps> = ({ cipherState, onAnalysisComplete
                 title="Security Score"
                 value={`${results.strength}/100`}
                 icon={Shield}
-                className={getStrengthColor(results.strength)}
+                className={getStrengthColor(results.strength.overall)}
               />
               <StatCard
                 title="Entropy"
@@ -219,8 +220,8 @@ const AIAnalyzer: React.FC<AIAnalyzerProps> = ({ cipherState, onAnalysisComplete
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">Security Assessment</h3>
-                  <Badge variant={getStrengthBadgeVariant(results.strength)}>
-                    {results.strength >= 80 ? 'Strong' : results.strength >= 60 ? 'Moderate' : 'Weak'}
+                  <Badge variant={getStrengthBadgeVariant(results.strength.overall)}>
+                    {results.strength.overall >= 80 ? 'Strong' : results.strength.overall >= 60 ? 'Moderate' : 'Weak'}
                   </Badge>
                 </div>
               </CardHeader>
@@ -228,7 +229,7 @@ const AIAnalyzer: React.FC<AIAnalyzerProps> = ({ cipherState, onAnalysisComplete
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Overall Strength</span>
-                    <Progress value={results.strength} className="w-32" />
+                    <Progress value={results.strength.overall} className="w-32" />
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Entropy Score</span>

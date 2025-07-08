@@ -26,7 +26,8 @@ export async function predictVulnerabilities(text: string, key: string): Promise
       type: 'weakness',
       confidence: 0.85,
       description: 'Short key length detected. Vulnerable to brute force attacks.',
-      impact: 'high'
+      impact: 'high',
+      risk: 'high'
     })
   }
   
@@ -37,7 +38,8 @@ export async function predictVulnerabilities(text: string, key: string): Promise
       type: 'weakness',
       confidence: 0.72,
       description: 'Low entropy detected. Text may have predictable patterns.',
-      impact: 'medium'
+      impact: 'medium',
+      risk: 'medium'
     })
   }
   
@@ -48,7 +50,8 @@ export async function predictVulnerabilities(text: string, key: string): Promise
       type: 'weakness',
       confidence: 0.68,
       description: 'Uneven character distribution suggests weak encryption.',
-      impact: 'medium'
+      impact: 'medium',
+      risk: 'medium'
     })
   }
   
@@ -58,7 +61,8 @@ export async function predictVulnerabilities(text: string, key: string): Promise
       type: 'strength',
       confidence: 0.91,
       description: 'High entropy indicates good randomness properties.',
-      impact: 'low'
+      impact: 'low',
+      risk: 'low'
     })
   }
   
@@ -67,7 +71,8 @@ export async function predictVulnerabilities(text: string, key: string): Promise
     type: 'optimization',
     confidence: 0.76,
     description: 'Consider using ChaCha20 for better performance and security.',
-    impact: 'low'
+    impact: 'low',
+    risk: 'low'
   })
   
   // Quantum threats
@@ -75,7 +80,8 @@ export async function predictVulnerabilities(text: string, key: string): Promise
     type: 'threat',
     confidence: 0.45,
     description: 'Current algorithm may be vulnerable to future quantum attacks.',
-    impact: 'high'
+    impact: 'high',
+    risk: 'medium'
   })
   
   return predictions
