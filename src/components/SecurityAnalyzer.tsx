@@ -132,38 +132,100 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
   const assessSecurity = async (_text: string) => {
     const keyStrength = calculateKeyStrength(cipherState.key)
     const algorithmStrength = getAlgorithmStrength(cipherState.algorithm)
+    const implementationStrength = 77
+    const quantumResistance = cipherState.algorithm === 'chacha20' ? 85 : 60
+    
+    // Calculate overall strength as weighted average
+    const overall = Math.round(
+      keyStrength * 0.35 + 
+      algorithmStrength * 0.25 + 
+      implementationStrength * 0.25 + 
+      quantumResistance * 0.15
+    )
     
     return {
       keyStrength,
       algorithmStrength,
-      implementationStrength: 77,
-      quantumResistance: cipherState.algorithm === 'chacha20' ? 85 : 60,
-      overallStrength: Math.round((keyStrength + algorithmStrength + 77 + 60) / 4)
+      implementationStrength,
+      quantumResistance,
+      overallStrength: overall
     }
   }
 
-  const runAIAnalysis = async (_text: string) => {
-    const predictions = [
-      {
-        type: 'Pattern Analysis',
-        confidence: 0.8,
-        description: 'No significant patterns detected in ciphertext',
-        impact: 'low' as const
-      }
-    ]
-
+  const runAIAnalysis = async (text: string) => {
+    const entropy = calculateLocalEntropy(text)
+    const keyLength = cipherState.key.length
+    const algorithm = cipherState.algorithm
+    
+    const predictions = []
     const vulnerabilities = []
-    if (cipherState.key.length < 16) {
-      vulnerabilities.push('Key length is below recommended minimum')
+    const recommendations = []
+
+    // Analyze key strength
+    if (keyLength < 16) {
+      vulnerabilities.push('Key length below recommended minimum (16+ characters)')
+      recommendations.push('Use a longer key (32+ characters recommended)')
     }
 
-    const recommendations = [
-      'Consider using longer keys for enhanced security',
-      'Regular key rotation is recommended',
-      'Monitor for unusual patterns in encrypted data'
-    ]
+    // Analyze entropy
+    if (entropy < 4.0) {
+      vulnerabilities.push('Low entropy detected - text may contain patterns')
+      predictions.push({
+        type: 'Pattern Analysis',
+        confidence: 0.8,
+        description: 'Low entropy suggests predictable patterns in the data',
+        impact: 'high' as const,
+        risk: 'high' as const
+      })
+    } else {
+      predictions.push({
+        type: 'Pattern Analysis',
+        confidence: 0.9,
+        description: 'Good entropy levels - no obvious patterns detected',
+        impact: 'low' as const,
+        risk: 'low' as const
+      })
+    }
 
-    return { aiPredictions: predictions, vulnerabilities, recommendations }
+    // Algorithm-specific analysis
+    if (algorithm === 'xor') {
+      vulnerabilities.push('XOR cipher is cryptographically weak')
+      recommendations.push('Consider upgrading to AES or ChaCha20')
+    }
+
+    // Add general recommendations
+    if (algorithm !== 'aes') {
+      recommendations.push('Consider using AES for production systems')
+    }
+    recommendations.push('Regular key rotation is recommended')
+    recommendations.push('Monitor for unusual patterns in encrypted data')
+
+    // Frequency analysis
+    const frequencyAnalysis = calculateFrequencyAnalysis(text)
+
+    return { 
+      aiPredictions: predictions, 
+      vulnerabilities, 
+      recommendations,
+      frequencyAnalysis
+    }
+  }
+
+  const calculateFrequencyAnalysis = (text: string) => {
+    const freq: { [key: string]: number } = {}
+    for (const char of text) {
+      freq[char] = (freq[char] || 0) + 1
+    }
+    
+    return Object.entries(freq)
+      .map(([character, count]) => ({
+        character,
+        frequency: Math.round((count / text.length) * 100 * 100) / 100,
+        expected: 100 / Object.keys(freq).length,
+        deviation: Math.abs((count / text.length) * 100 - (100 / Object.keys(freq).length))
+      }))
+      .sort((a, b) => b.frequency - a.frequency)
+      .slice(0, 10)
   }
 
   const calculateLocalEntropy = (text: string): number => {
@@ -187,13 +249,57 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
     if (!key) return 0
     
     let score = 0
-    score += Math.min(50, key.length * 2) // Length score
-    score += /[a-z]/.test(key) ? 10 : 0 // Lowercase
-    score += /[A-Z]/.test(key) ? 10 : 0 // Uppercase
-    score += /[0-9]/.test(key) ? 10 : 0 // Numbers
-    score += /[^a-zA-Z0-9]/.test(key) ? 20 : 0 // Special chars
+    const length = key.length
     
-    return Math.min(100, score)
+    // Length scoring (0-40 points)
+    if (length >= 32) score += 40
+    else if (length >= 24) score += 35
+    else if (length >= 16) score += 25
+    else if (length >= 12) score += 15
+    else if (length >= 8) score += 10
+    else score += 5
+    
+    // Character variety (0-25 points)
+    const hasLowercase = /[a-z]/.test(key)
+    const hasUppercase = /[A-Z]/.test(key)
+    const hasNumbers = /[0-9]/.test(key)
+    const hasSpecialChars = /[^a-zA-Z0-9]/.test(key)
+    const hasComplexSpecials = /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?~`]/.test(key)
+    
+    if (hasLowercase) score += 5
+    if (hasUppercase) score += 5
+    if (hasNumbers) score += 5
+    if (hasSpecialChars) score += 5
+    if (hasComplexSpecials) score += 5
+    
+    // Entropy calculation (0-25 points)
+    const uniqueChars = new Set(key).size
+    const entropyScore = Math.min(25, (uniqueChars / length) * 50)
+    score += entropyScore
+    
+    // Pattern analysis (0-10 points penalty)
+    const patterns = detectKeyPatterns(key)
+    score -= patterns * 2
+    
+    return Math.max(0, Math.min(100, Math.round(score)))
+  }
+
+  const detectKeyPatterns = (key: string): number => {
+    let penalties = 0
+    
+    // Check for repeated characters
+    const repeatedChars = key.match(/(.)\1{2,}/g)
+    if (repeatedChars) penalties += repeatedChars.length
+    
+    // Check for sequential patterns
+    const sequential = key.match(/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|123|234|345|456|567|678|789)/gi)
+    if (sequential) penalties += sequential.length
+    
+    // Check for keyboard patterns
+    const keyboard = key.match(/(qwe|wer|ert|rty|tyu|yui|uio|iop|asd|sdf|dfg|fgh|ghj|hjk|jkl|zxc|xcv|cvb|vbn|bnm)/gi)
+    if (keyboard) penalties += keyboard.length
+    
+    return penalties
   }
 
   const getAlgorithmStrength = (algorithm: string): number => {

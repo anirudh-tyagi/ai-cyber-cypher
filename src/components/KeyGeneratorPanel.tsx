@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Key, Shield, Zap, Lock, Copy, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -21,6 +21,16 @@ const KeyGeneratorPanel: React.FC<KeyGeneratorProps> = ({ onKeyGenerated, curren
   })
   const [isGenerating, setIsGenerating] = useState(false)
   const [keyStrength, setKeyStrength] = useState<number>(0)
+
+  // Analyze current key strength whenever the key changes
+  useEffect(() => {
+    if (currentKey) {
+      const strength = analyzeKeyStrength(currentKey)
+      setKeyStrength(strength)
+    } else {
+      setKeyStrength(0)
+    }
+  }, [currentKey])
 
   const generateKey = useCallback(async () => {
     setIsGenerating(true)
@@ -68,13 +78,57 @@ const KeyGeneratorPanel: React.FC<KeyGeneratorProps> = ({ onKeyGenerated, curren
     if (!key) return 0
     
     let score = 0
-    score += Math.min(50, key.length * 2) // Length score
-    score += /[a-z]/.test(key) ? 10 : 0 // Lowercase
-    score += /[A-Z]/.test(key) ? 10 : 0 // Uppercase
-    score += /[0-9]/.test(key) ? 10 : 0 // Numbers
-    score += /[^a-zA-Z0-9]/.test(key) ? 20 : 0 // Special chars
+    const length = key.length
     
-    return Math.min(100, score)
+    // Length scoring (0-40 points)
+    if (length >= 32) score += 40
+    else if (length >= 24) score += 35
+    else if (length >= 16) score += 25
+    else if (length >= 12) score += 15
+    else if (length >= 8) score += 10
+    else score += 5
+    
+    // Character variety (0-25 points)
+    const hasLowercase = /[a-z]/.test(key)
+    const hasUppercase = /[A-Z]/.test(key)
+    const hasNumbers = /[0-9]/.test(key)
+    const hasSpecialChars = /[^a-zA-Z0-9]/.test(key)
+    const hasComplexSpecials = /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?~`]/.test(key)
+    
+    if (hasLowercase) score += 5
+    if (hasUppercase) score += 5
+    if (hasNumbers) score += 5
+    if (hasSpecialChars) score += 5
+    if (hasComplexSpecials) score += 5
+    
+    // Entropy calculation (0-25 points)
+    const uniqueChars = new Set(key).size
+    const entropyScore = Math.min(25, (uniqueChars / length) * 50)
+    score += entropyScore
+    
+    // Pattern analysis (0-10 points penalty)
+    const patterns = detectKeyPatterns(key)
+    score -= patterns * 2
+    
+    return Math.max(0, Math.min(100, Math.round(score)))
+  }
+
+  const detectKeyPatterns = (key: string): number => {
+    let penalties = 0
+    
+    // Check for repeated characters
+    const repeatedChars = key.match(/(.)\1{2,}/g)
+    if (repeatedChars) penalties += repeatedChars.length
+    
+    // Check for sequential patterns
+    const sequential = key.match(/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|123|234|345|456|567|678|789)/gi)
+    if (sequential) penalties += sequential.length
+    
+    // Check for keyboard patterns
+    const keyboard = key.match(/(qwe|wer|ert|rty|tyu|yui|uio|iop|asd|sdf|dfg|fgh|ghj|hjk|jkl|zxc|xcv|cvb|vbn|bnm)/gi)
+    if (keyboard) penalties += keyboard.length
+    
+    return penalties
   }
 
   const copyKey = async () => {
@@ -231,7 +285,7 @@ const KeyGeneratorPanel: React.FC<KeyGeneratorProps> = ({ onKeyGenerated, curren
               </div>
               
               {keyStrength > 0 && (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Strength Analysis</span>
                     <span className={`text-sm font-medium ${getStrengthColor(keyStrength)}`}>
@@ -243,7 +297,7 @@ const KeyGeneratorPanel: React.FC<KeyGeneratorProps> = ({ onKeyGenerated, curren
                     className="w-full"
                   />
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <StatCard
                       title="Security Rating"
                       value={getStrengthLabel(keyStrength)}
@@ -256,6 +310,56 @@ const KeyGeneratorPanel: React.FC<KeyGeneratorProps> = ({ onKeyGenerated, curren
                       icon={Key}
                       description="Character count"
                     />
+                    <StatCard
+                      title="Unique Chars"
+                      value={`${new Set(currentKey).size}`}
+                      icon={Lock}
+                      description="Character variety"
+                    />
+                  </div>
+                  
+                  {/* Detailed Analysis */}
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span>Lowercase:</span>
+                        <span className={/[a-z]/.test(currentKey) ? 'text-green-500' : 'text-red-500'}>
+                          {/[a-z]/.test(currentKey) ? '✓' : '✗'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Uppercase:</span>
+                        <span className={/[A-Z]/.test(currentKey) ? 'text-green-500' : 'text-red-500'}>
+                          {/[A-Z]/.test(currentKey) ? '✓' : '✗'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Numbers:</span>
+                        <span className={/[0-9]/.test(currentKey) ? 'text-green-500' : 'text-red-500'}>
+                          {/[0-9]/.test(currentKey) ? '✓' : '✗'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span>Symbols:</span>
+                        <span className={/[^a-zA-Z0-9]/.test(currentKey) ? 'text-green-500' : 'text-red-500'}>
+                          {/[^a-zA-Z0-9]/.test(currentKey) ? '✓' : '✗'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Entropy:</span>
+                        <span className="text-blue-500">
+                          {Math.round((new Set(currentKey).size / currentKey.length) * 100)}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Patterns:</span>
+                        <span className={detectKeyPatterns(currentKey) === 0 ? 'text-green-500' : 'text-yellow-500'}>
+                          {detectKeyPatterns(currentKey) === 0 ? 'None' : detectKeyPatterns(currentKey)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
