@@ -48,7 +48,7 @@ CyberCipher is a comprehensive cryptographic analysis platform that combines mod
 ### ✨ Key Features
 
 - **🔑 Advanced Key Generation** - Cryptographically secure key generation with multiple algorithms
-- **🔒 Multi-Algorithm Cipher Engine** - Support for RC4, AES, XOR, and custom ciphers
+- **🔒 Multi-Algorithm Cipher Engine** - Support for RC4 and ChaCha20 stream ciphers
 - **🧠 AI-Powered Security Analysis** - Context-aware vulnerability detection and recommendations
 - **� Interactive Visualizations** - Dynamic charts for bit distribution, frequency analysis, and security metrics
 - **🌐 Professional UI/UX** - Modern, responsive dashboard with dark/light theme support
@@ -142,7 +142,7 @@ src/
 │   ├── ⚙️  CipherEngine.tsx        # Encryption/decryption operations
 │   ├── 🛡️  SecurityAnalyzer.tsx    # Security analysis tools
 │   ├── 📊 AnalysisDashboard.tsx    # Data visualization dashboard
-│   ├── 📈 VisualizationDashboard.tsx # Interactive charts & graphs
+│   ├── 📈 AnalysisDashboard.tsx # Interactive charts & graphs
 │   ├── 🎨 Header.tsx              # Application header
 │   └── ui/                        # Reusable UI components
 │       ├── Button.tsx
@@ -154,6 +154,7 @@ src/
 │   └── 🌐 apiClient.ts            # API communication layer
 ├── types/
 │   └── 📋 cipher.ts               # TypeScript type definitions
+│   └── 🔐 cipherAlgorithms.ts     # RC4 and ChaCha20 implementations
 └── utils/
     └── 🔧 cn.ts                   # Utility functions
 ```
@@ -202,10 +203,12 @@ try {
 **Purpose**: Perform encryption and decryption operations with multiple algorithms.
 
 **Supported Algorithms**:
-- **RC4**: Stream cipher with variable key length
-- **AES**: Advanced Encryption Standard (simulated)
-- **XOR**: Simple XOR cipher for educational purposes
-- **Custom**: Extensible for additional algorithms
+- **RC4**: Variable key-size stream cipher (legacy support)
+- **ChaCha20**: Modern stream cipher by Daniel J. Bernstein
+  - IETF standard (RFC 8439)
+  - Constant-time implementation
+  - Excellent performance across platforms
+  - Superior security to legacy algorithms
 
 **Features**:
 - **Real-time Processing**: Instant encryption/decryption

@@ -29,7 +29,7 @@
 **CyberCipher** is a comprehensive cryptographic analysis platform that combines modern web technologies with advanced cryptographic algorithms. Built using React/TypeScript frontend and FastAPI backend, it serves as both an educational tool and a professional-grade security analysis platform.
 
 ### Core Capabilities:
-- **Multi-Algorithm Encryption/Decryption**: RC4, AES (simulated), XOR, and custom implementations
+- **Multi-Algorithm Encryption/Decryption**: RC4 and ChaCha20 stream cipher implementations
 - **Advanced Key Generation**: Cryptographically secure random key generation with entropy analysis
 - **Real-Time Security Analysis**: Shannon entropy calculation, pattern detection, vulnerability assessment
 - **Interactive Visualizations**: Frequency analysis, bit distribution, security metrics dashboards
@@ -113,7 +113,7 @@ graph TB
 │  │     Panel       │  │                 │  │                 │ │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │ 📊 Analysis     │  │ 📈 Visualization │  │ 🎛️ Dashboard    │ │
+│  │ 📊 Analysis     │  │ 📈 Analysis      │  │ 🎛️ Dashboard    │ │
 │  │   Dashboard     │  │   Dashboard     │  │   Controller    │ │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
 ├─────────────────────────────────────────────────────────────────┤
@@ -204,73 +204,50 @@ function rc4Encrypt(plaintext: string, key: string): string {
 - **Weaknesses**: Known vulnerabilities (bias in keystream, related-key attacks)
 - **Real-World Status**: Disabled in major browsers, not recommended for new applications
 
-### 2. AES (Advanced Encryption Standard) - Simulated
-
-**Algorithm Type**: Block Cipher  
-**Key Sizes**: 128, 192, 256 bits  
-**Block Size**: 128 bits  
-**Status**: **RECOMMENDED**
-
-#### Simplified Implementation (Educational):
-
-```typescript
-function aesEncrypt(plaintext: string, key: string): string {
-  // Simplified AES simulation for educational purposes
-  // Real AES involves SubBytes, ShiftRows, MixColumns, AddRoundKey
-  
-  const rounds = key.length >= 32 ? 14 : (key.length >= 24 ? 12 : 10);
-  let state = plaintext;
-  
-  for (let round = 0; round < rounds; round++) {
-    // Simplified round function
-    state = substitutionBox(state);
-    state = shiftRows(state);
-    if (round < rounds - 1) {
-      state = mixColumns(state);
-    }
-    state = addRoundKey(state, deriveRoundKey(key, round));
-  }
-  
-  return state;
-}
-```
-
-**Mathematical Operations:**
-- **SubBytes**: S-box substitution using Galois Field GF(2^8)
-- **ShiftRows**: Cyclic shift of rows in state matrix
-- **MixColumns**: Matrix multiplication in GF(2^8)
-- **AddRoundKey**: XOR with round key
-
-**Security Strength**: 95/100 in our rating system
-
-### 3. XOR Cipher (Educational)
+### 2. ChaCha20 Stream Cipher
 
 **Algorithm Type**: Stream Cipher  
-**Key Size**: Variable  
-**Status**: **EDUCATIONAL ONLY**
+**Key Size**: 256 bits  
+**Nonce Size**: 96 bits  
+**Status**: **RECOMMENDED**
 
-#### Implementation:
+#### Implementation Analysis:
 
 ```typescript
-function xorCipher(text: string, key: string): string {
-  let result = '';
-  for (let i = 0; i < text.length; i++) {
-    const textChar = text.charCodeAt(i);
-    const keyChar = key.charCodeAt(i % key.length);
-    result += String.fromCharCode(textChar ^ keyChar);
+function chacha20Encrypt(plaintext: string, key: string, nonce?: string): string {
+  // Initialize ChaCha20 state
+  const state = new Uint32Array(16);
+  
+  // Constants ("expand 32-byte k")
+  state[0] = 0x61707865;
+  state[1] = 0x3320646e;
+  state[2] = 0x79622d32;
+  state[3] = 0x6b206574;
+  
+  // 256-bit key (8 words)
+  const keyWords = parseKeyTo32BitWords(key);
+  for (let i = 0; i < 8; i++) {
+    state[4 + i] = keyWords[i];
   }
-  return result;
+  
+  // 32-bit counter + 96-bit nonce
+  state[12] = 0; // counter
+  const nonceWords = parseNonceTo32BitWords(nonce || '');
+  for (let i = 0; i < 3; i++) {
+    state[13 + i] = nonceWords[i];
+  }
+  
+  // Generate keystream and encrypt
+  const textBytes = new TextEncoder().encode(plaintext);
+  const keystream = generateChaCha20Keystream(state, textBytes.length);
+  
+  const result = new Uint8Array(textBytes.length);
+  for (let i = 0; i < textBytes.length; i++) {
+    result[i] = textBytes[i] ^ keystream[i];
+  }
+  
+  return new TextDecoder().decode(result);
 }
-```
-
-**Mathematical Formula:**
-- **Encryption**: `C[i] = P[i] ⊕ K[i mod |K|]`
-- **Decryption**: `P[i] = C[i] ⊕ K[i mod |K|]` (identical operation)
-
-**Security Analysis:**
-- **Strength**: 10/100 (educational only)
-- **Vulnerabilities**: Frequency analysis, known-plaintext attacks
-- **Use Case**: Teaching cryptographic concepts
 
 ---
 
@@ -391,7 +368,7 @@ function analyzeKeyStrength(key: string): number {
 ```
 Input Text → Algorithm Selection → Encryption Process → Output Format
      ↓              ↓                    ↓               ↓
-"Hello World"  →  "aes"  →  AES_Encrypt(text, key)  →  Hex String
+"Hello World"  →  "chacha20"  →  ChaCha20_Encrypt(text, key)  →  Hex String
 ```
 
 **Implementation:**
@@ -402,12 +379,18 @@ async function encryptText(text: string, key: string, algorithm: string): Promis
   
   // Algorithm dispatch
   switch (algorithm.toLowerCase()) {
-    case 'aes':
-      return hexEncode(aesEncrypt(text, key));
+    case 'chacha20':
+      return hexEncode(chacha20Encrypt(text, key));
     case 'rc4':
       return hexEncode(rc4Encrypt(text, key));
-    case 'xor':
-      return hexEncode(xorCipher(text, key));
+    default:
+      throw new Error(`Unsupported algorithm: ${algorithm}`);
+
+      return hexEncode(aesEncrypt(text, key));
+          case 'chacha20':
+      return hexEncode(chacha20Encrypt(text, key));
+          case 'rc4':
+      return hexEncode(rc4Encrypt(text, key));
     default:
       throw new Error('Unsupported algorithm');
   }
@@ -488,12 +471,8 @@ function calculateSecurityScore(state: CipherState): SecurityStrength {
 **Algorithm Strength Ratings:**
 ```typescript
 const algorithmStrengths = {
-  'aes': 95,        // Industry standard, NIST approved
-  'chacha20': 90,   // Modern, fast, secure
+  'chacha20': 95,   // Modern, fast, secure, IETF standard
   'rc4': 25,        // Deprecated due to vulnerabilities
-  'des': 15,        // Broken, 56-bit key space
-  'xor': 10,        // Educational only
-  'caesar': 5       // Historical cipher
 };
 ```
 
@@ -611,21 +590,19 @@ async function predictVulnerabilities(text: string, key: string, algorithm: stri
         description: 'RC4 has known vulnerabilities: biased keystream, related-key attacks',
         impact: 'critical',
         risk: 'high',
-        recommendation: 'Migrate to AES-256-GCM or ChaCha20-Poly1305 immediately'
+                recommendation: 'Migrate to ChaCha20 or other modern stream ciphers immediately'
       });
       break;
       
-    case 'aes':
-      if (key.length >= 16) {
-        predictions.push({
-          type: 'strength',
-          confidence: 0.92,
-          description: 'AES with adequate key length provides strong security',
-          impact: 'positive',
-          risk: 'low',
-          recommendation: 'Monitor post-quantum cryptography developments'
-        });
-      }
+    case 'chacha20':
+      predictions.push({
+        type: 'strength',
+        confidence: 0.95,
+        description: 'ChaCha20 provides excellent security and performance',
+        impact: 'positive',
+        risk: 'low',
+        recommendation: 'Optimal choice for modern applications'
+      });
       break;
       
     case 'xor':
@@ -741,7 +718,7 @@ const runAIAnalysis = async (text: string) => {
       
       // Generate context-specific recommendations
       if (prediction.description.includes('RC4')) {
-        recommendations.push('Migrate to AES-256-GCM or ChaCha20-Poly1305 immediately')
+           recommendations.push('Migrate to ChaCha20 or other modern ciphers immediately')
       } else if (prediction.description.includes('short key')) {
         recommendations.push('Use a minimum key length of 16-24 characters')
       } else if (prediction.description.includes('entropy')) {
@@ -1459,9 +1436,9 @@ const secureApiClient = {
 #### Algorithm Selection Guidelines
 ```typescript
 const algorithmRecommendations = {
-  'production': ['aes-256-gcm', 'chacha20-poly1305'],
-  'legacy_support': ['aes-256-cbc', 'aes-192-gcm'],
-  'deprecated': ['rc4', 'des', '3des'],
+  'production': ['chacha20'],
+  'legacy_support': ['rc4'], // Not recommended for new applications
+  'deprecated': ['des', '3des'],
   'educational_only': ['xor', 'caesar', 'vigenere']
 };
 
@@ -1471,10 +1448,10 @@ function selectSecureAlgorithm(context: SecurityContext): string {
   }
   
   if (context.performance === 'high') {
-    return 'chacha20-poly1305';
+    return 'chacha20';
   }
   
-  return 'aes-256-gcm'; // Default secure choice
+  return 'chacha20'; // Default secure choice
 }
 ```
 
@@ -1528,18 +1505,12 @@ const privacyCompliantProcessing = {
 
 | Algorithm   | Key Setup | Encryption | Decryption | Memory Usage | Performance Rating |
 |-------------|-----------|------------|------------|--------------|-------------------|
-| AES-256     | Fast      | 850 MB/s   | 850 MB/s   | Low          | 🟡 Good           |
 | ChaCha20    | Very Fast | 1200 MB/s  | 1200 MB/s  | Very Low     | 🟢 Excellent      |
 | RC4         | Very Fast | 400 MB/s   | 400 MB/s   | Very Low     | 🟠 Fair           |
-| XOR         | N/A       | 2000 MB/s  | 2000 MB/s  | Very Low     | 🟢 Excellent*     |
-
-*Note: XOR cipher is for educational purposes only and provides no real security.*
 
 **Performance Ratings:**
-- 🟢 **Excellent** (>1000 MB/s): ChaCha20, XOR
-- 🟡 **Good** (500-1000 MB/s): AES-256  
+- 🟢 **Excellent** (>1000 MB/s): ChaCha20
 - 🟠 **Fair** (100-500 MB/s): RC4
-- 🔴 **Poor** (<100 MB/s): Legacy algorithms
 
 #### Memory Complexity Analysis
 ```typescript
@@ -1552,19 +1523,19 @@ interface PerformanceMetrics {
 }
 
 const algorithmMetrics: Record<string, PerformanceMetrics> = {
-  'aes': {
-    timeComplexity: 'O(n)',
-    spaceComplexity: 'O(1)',
-    keySetupTime: 0.1,
-    throughput: 850,
-    energyEfficiency: 1000
-  },
   'chacha20': {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     keySetupTime: 0.05,
     throughput: 1200,
     energyEfficiency: 1500
+  },
+  'rc4': {
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    keySetupTime: 0.02,
+    throughput: 400,
+    energyEfficiency: 800
   }
 };
 ```
@@ -1574,7 +1545,7 @@ const algorithmMetrics: Record<string, PerformanceMetrics> = {
 #### Frontend Performance Optimization
 ```typescript
 // Lazy loading for large datasets
-const LazyVisualization = React.lazy(() => import('./VisualizationDashboard'));
+const LazyVisualization = React.lazy(() => import('./AnalysisDashboard'));
 
 // Memoization for expensive calculations
 const memoizedEntropyCalculation = useMemo(() => {
