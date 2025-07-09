@@ -39,14 +39,19 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
         { progress: 40, message: 'Pattern detection...', action: () => detectPatterns(textToAnalyze) },
         { progress: 60, message: 'Security assessment...', action: () => assessSecurity(textToAnalyze) },
         { progress: 80, message: 'AI analysis...', action: () => runAIAnalysis(textToAnalyze) },
-        { progress: 100, message: 'Complete!', action: () => Promise.resolve() }
+        { progress: 100, message: 'Complete!', action: null }
       ]
 
       let analysisData: any = {
         entropy: 0,
         patterns: [],
         vulnerabilities: [],
-        aiPredictions: []
+        aiPredictions: [],
+        keyStrength: 0,
+        algorithmStrength: 0,
+        implementationStrength: 77,
+        quantumResistance: 60,
+        overall: 0
       }
 
       for (const step of steps) {
@@ -55,13 +60,15 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
         
         if (step.action) {
           const stepResult = await step.action()
-          analysisData = { ...analysisData, ...stepResult }
+          if (stepResult) {
+            analysisData = { ...analysisData, ...stepResult }
+          }
         }
         
         await new Promise(resolve => setTimeout(resolve, 800))
       }
 
-      // Create analysis results
+      // Create analysis results with proper data
       const analysisResults: AnalysisResults = {
         entropy: analysisData.entropy || 4.2,
         patternAnalysis: {
@@ -71,7 +78,7 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
         },
         frequencyAnalysis: analysisData.frequencyAnalysis || [],
         strength: {
-          overall: analysisData.overallStrength || 78,
+          overall: analysisData.overall || 78,
           keyStrength: analysisData.keyStrength || 82,
           algorithmStrength: analysisData.algorithmStrength || 75,
           implementationStrength: analysisData.implementationStrength || 77,
@@ -148,60 +155,109 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
       algorithmStrength,
       implementationStrength,
       quantumResistance,
-      overallStrength: overall
+      overall // Fixed property name
     }
   }
 
   const runAIAnalysis = async (text: string) => {
     const entropy = calculateLocalEntropy(text)
     const keyLength = cipherState.key.length
-    const algorithm = cipherState.algorithm
+    const algorithm = cipherState.algorithm.toLowerCase()
+    const keyStrength = calculateKeyStrength(cipherState.key)
+    const algorithmStrength = getAlgorithmStrength(algorithm)
     
     const predictions = []
     const vulnerabilities = []
     const recommendations = []
 
     // Analyze key strength
-    if (keyLength < 16) {
+    if (keyLength < 12) {
+      vulnerabilities.push('Key length critically low (< 12 characters)')
+      predictions.push({
+        type: 'weakness',
+        confidence: 0.95,
+        description: 'Extremely short key makes brute force attacks feasible',
+        impact: 'critical' as const,
+        risk: 'high' as const
+      })
+      recommendations.push('Use a minimum key length of 16 characters')
+    } else if (keyLength < 16) {
       vulnerabilities.push('Key length below recommended minimum (16+ characters)')
       recommendations.push('Use a longer key (32+ characters recommended)')
     }
 
-    // Analyze entropy
-    if (entropy < 4.0) {
-      vulnerabilities.push('Low entropy detected - text may contain patterns')
+    // Analyze key quality
+    if (keyStrength < 40) {
+      vulnerabilities.push('Key has poor complexity and patterns')
+      recommendations.push('Use mixed case letters, numbers, and special characters')
+    }
+
+    // Analyze algorithm security
+    if (algorithmStrength < 30) {
+      vulnerabilities.push(`${algorithm.toUpperCase()} algorithm is cryptographically broken`)
       predictions.push({
-        type: 'Pattern Analysis',
-        confidence: 0.8,
-        description: 'Low entropy suggests predictable patterns in the data',
+        type: 'threat',
+        confidence: 0.9,
+        description: `${algorithm.toUpperCase()} has known vulnerabilities and should not be used`,
+        impact: 'critical' as const,
+        risk: 'high' as const
+      })
+      recommendations.push('Upgrade to AES-256 or ChaCha20 immediately')
+    } else if (algorithmStrength < 60) {
+      vulnerabilities.push(`${algorithm.toUpperCase()} algorithm has known weaknesses`)
+      recommendations.push('Consider upgrading to a more modern cipher like AES or ChaCha20')
+    }
+
+    // Analyze entropy
+    if (entropy < 3.5) {
+      vulnerabilities.push('Very low entropy detected - high pattern predictability')
+      predictions.push({
+        type: 'weakness',
+        confidence: 0.85,
+        description: 'Extremely low entropy suggests highly predictable patterns',
         impact: 'high' as const,
         risk: 'high' as const
       })
+    } else if (entropy < 4.5) {
+      vulnerabilities.push('Low entropy detected - text may contain patterns')
+      predictions.push({
+        type: 'weakness',
+        confidence: 0.7,
+        description: 'Low entropy suggests some predictable patterns in the data',
+        impact: 'medium' as const,
+        risk: 'medium' as const
+      })
     } else {
       predictions.push({
-        type: 'Pattern Analysis',
-        confidence: 0.9,
+        type: 'strength',
+        confidence: 0.8,
         description: 'Good entropy levels - no obvious patterns detected',
         impact: 'low' as const,
         risk: 'low' as const
       })
     }
 
-    // Algorithm-specific analysis
-    if (algorithm === 'xor') {
-      vulnerabilities.push('XOR cipher is cryptographically weak')
-      recommendations.push('Consider upgrading to AES or ChaCha20')
-    }
-
-    // Add general recommendations
-    if (algorithm !== 'aes') {
-      recommendations.push('Consider using AES for production systems')
-    }
-    recommendations.push('Regular key rotation is recommended')
-    recommendations.push('Monitor for unusual patterns in encrypted data')
-
-    // Frequency analysis
+    // Frequency analysis recommendations
     const frequencyAnalysis = calculateFrequencyAnalysis(text)
+    const topCharFreq = frequencyAnalysis[0]?.frequency || 0
+    if (topCharFreq > 15) {
+      vulnerabilities.push('High character frequency concentration detected')
+      recommendations.push('Consider using a different plaintext or encryption mode')
+    }
+
+    // General security recommendations
+    if (!vulnerabilities.length) {
+      recommendations.push('Security configuration appears robust')
+    }
+    recommendations.push('Implement regular key rotation policy')
+    recommendations.push('Monitor encrypted data for anomalies')
+    
+    // Algorithm-specific recommendations
+    if (algorithm === 'aes') {
+      recommendations.push('Ensure you are using AES-256 with a proper mode (GCM recommended)')
+    } else if (algorithm === 'chacha20') {
+      recommendations.push('ChaCha20 is excellent - ensure proper nonce management')
+    }
 
     return { 
       aiPredictions: predictions, 
@@ -304,12 +360,23 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
 
   const getAlgorithmStrength = (algorithm: string): number => {
     const strengths: { [key: string]: number } = {
-      'rc4': 60,
-      'chacha20': 90,
-      'aes': 85,
-      'des': 30
+      'aes': 95,        // Very strong, widely trusted
+      'chacha20': 90,   // Modern, secure stream cipher
+      'rc4': 25,        // Deprecated, many vulnerabilities
+      'des': 15,        // Broken, should not be used
+      '3des': 45,       // Deprecated but still somewhat secure
+      'xor': 10,        // Educational only, not secure
+      'caesar': 5,      // Historical cipher, easily broken
+      'vigenere': 20,   // Classical cipher, frequency analysis vulnerable
+      'blowfish': 70,   // Good but aging
+      'twofish': 85,    // Strong but less common
+      'serpent': 90,    // Very secure
+      'rsa': 80,        // Asymmetric, depends on key size
+      'ecc': 90         // Elliptic curve, efficient and secure
     }
-    return strengths[algorithm] || 50
+    
+    const normalizedAlgorithm = algorithm.toLowerCase().replace(/[-_\s]/g, '')
+    return strengths[normalizedAlgorithm] || 50 // Default for unknown algorithms
   }
 
   const getStrengthColor = (strength: any): string => {
@@ -398,50 +465,129 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Security Assessment</h3>
+                  <h3 className="text-lg font-semibold">Detailed Security Assessment</h3>
                   <Badge variant={getStrengthBadgeVariant(results.strength)}>
                     {results.strength.overall >= 80 ? 'Strong' : results.strength.overall >= 60 ? 'Moderate' : 'Weak'}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Overall Strength</span>
-                    <Progress value={results.strength.overall} className="w-32" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Key Strength</span>
-                    <Progress value={results.strength.keyStrength} className="w-32" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Algorithm Strength</span>
-                    <Progress value={results.strength.algorithmStrength} className="w-32" />
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Overall Strength</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={results.strength.overall} className="w-24" />
+                          <span className="text-sm font-medium">{results.strength.overall}%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Key Strength</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={results.strength.keyStrength} className="w-24" />
+                          <span className="text-sm font-medium">{results.strength.keyStrength}%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Algorithm Strength</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={results.strength.algorithmStrength} className="w-24" />
+                          <span className="text-sm font-medium">{results.strength.algorithmStrength}%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Implementation</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={results.strength.implementationStrength} className="w-24" />
+                          <span className="text-sm font-medium">{results.strength.implementationStrength}%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Quantum Resistance</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={results.strength.quantumResistance} className="w-24" />
+                          <span className="text-sm font-medium">{results.strength.quantumResistance}%</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Data Entropy</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={Math.min(100, results.entropy * 20)} className="w-24" />
+                          <span className="text-sm font-medium">{results.entropy} bits</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Vulnerabilities */}
+            {/* Vulnerabilities and AI Predictions */}
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold">Security Assessment</h3>
+                <h3 className="text-lg font-semibold">Vulnerabilities & AI Analysis</h3>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {results.vulnerabilities.length > 0 ? (
-                    results.vulnerabilities.map((vuln, index) => (
-                      <div key={index} className="flex items-start space-x-3 p-3 bg-muted/30 rounded-lg">
-                        <AlertTriangle className="w-5 h-5 mt-0.5 text-yellow-500" />
-                        <div className="flex-1">
-                          <div className="font-medium text-sm">{typeof vuln === 'string' ? vuln : vuln.description}</div>
-                        </div>
+                <div className="space-y-4">
+                  {/* Vulnerabilities */}
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">Security Vulnerabilities</h4>
+                    {results.vulnerabilities.length > 0 ? (
+                      <div className="space-y-2">
+                        {results.vulnerabilities.map((vuln, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                            <AlertTriangle className="w-4 h-4 mt-0.5 text-red-500" />
+                            <div className="flex-1">
+                              <div className="text-sm text-red-700 dark:text-red-300">{typeof vuln === 'string' ? vuln : vuln.description}</div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-4 text-muted-foreground">
-                      <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                      No critical vulnerabilities detected
+                    ) : (
+                      <div className="text-center py-3 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                        <CheckCircle className="w-5 h-5 mx-auto mb-1" />
+                        <div className="text-sm">No critical vulnerabilities detected</div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* AI Predictions */}
+                  {results.aiPredictions.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">AI Security Insights</h4>
+                      <div className="space-y-2">
+                        {results.aiPredictions.map((prediction, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                            <Brain className="w-4 h-4 mt-0.5 text-blue-500" />
+                            <div className="flex-1">
+                              <div className="text-sm text-blue-700 dark:text-blue-300">
+                                <span className="font-medium">{prediction.type}:</span> {prediction.description}
+                              </div>
+                              <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                                Confidence: {Math.round(prediction.confidence * 100)}% | Risk: {prediction.risk}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Recommendations */}
+                  {results.recommendations.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">Security Recommendations</h4>
+                      <div className="space-y-2">
+                        {results.recommendations.map((rec, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                            <Shield className="w-4 h-4 mt-0.5 text-yellow-600" />
+                            <div className="text-sm text-yellow-700 dark:text-yellow-300">{rec}</div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
