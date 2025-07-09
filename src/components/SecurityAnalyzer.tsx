@@ -8,6 +8,7 @@ import { Progress } from './ui/Progress'
 import { Badge } from './ui/Badge'
 import { StatCard } from './ui/StatCard'
 import { apiClient } from '../services/apiClient'
+import { predictVulnerabilities } from '../utils/aiAnalysis'
 import toast from 'react-hot-toast'
 
 interface SecurityAnalyzerProps {
@@ -160,110 +161,66 @@ const SecurityAnalyzer: React.FC<SecurityAnalyzerProps> = ({ cipherState, onAnal
   }
 
   const runAIAnalysis = async (text: string) => {
-    const entropy = calculateLocalEntropy(text)
-    const keyLength = cipherState.key.length
-    const algorithm = cipherState.algorithm.toLowerCase()
-    const keyStrength = calculateKeyStrength(cipherState.key)
-    const algorithmStrength = getAlgorithmStrength(algorithm)
-    
-    const predictions = []
-    const vulnerabilities = []
-    const recommendations = []
+    try {
+      // Use the improved AI analysis function
+      const predictions = await predictVulnerabilities(text, cipherState.key, cipherState.algorithm)
+      
+      // Convert predictions to vulnerabilities and recommendations
+      const vulnerabilities: string[] = []
+      const recommendations: string[] = []
 
-    // Analyze key strength
-    if (keyLength < 12) {
-      vulnerabilities.push('Key length critically low (< 12 characters)')
-      predictions.push({
-        type: 'weakness',
-        confidence: 0.95,
-        description: 'Extremely short key makes brute force attacks feasible',
-        impact: 'critical' as const,
-        risk: 'high' as const
-      })
-      recommendations.push('Use a minimum key length of 16 characters')
-    } else if (keyLength < 16) {
-      vulnerabilities.push('Key length below recommended minimum (16+ characters)')
-      recommendations.push('Use a longer key (32+ characters recommended)')
-    }
+      for (const prediction of predictions) {
+        if (prediction.type === 'weakness' || prediction.type === 'threat') {
+          vulnerabilities.push(prediction.description)
+        }
+        
+        // Add recommendations based on prediction type
+        if (prediction.description.includes('RC4')) {
+          recommendations.push('Migrate to AES-256-GCM or ChaCha20-Poly1305 immediately')
+        } else if (prediction.description.includes('short key')) {
+          recommendations.push('Use a minimum key length of 16-24 characters')
+        } else if (prediction.description.includes('entropy')) {
+          recommendations.push('Consider using more random input data or stronger encryption')
+        } else if (prediction.description.includes('frequency')) {
+          recommendations.push('Consider text preprocessing or using authenticated encryption modes')
+        }
+      }
 
-    // Analyze key quality
-    if (keyStrength < 40) {
-      vulnerabilities.push('Key has poor complexity and patterns')
-      recommendations.push('Use mixed case letters, numbers, and special characters')
-    }
+      // If no vulnerabilities found, add positive feedback
+      if (vulnerabilities.length === 0) {
+        vulnerabilities.push('No significant security vulnerabilities detected')
+        recommendations.push('Current configuration meets security best practices')
+      }
 
-    // Analyze algorithm security
-    if (algorithmStrength < 30) {
-      vulnerabilities.push(`${algorithm.toUpperCase()} algorithm is cryptographically broken`)
-      predictions.push({
-        type: 'threat',
-        confidence: 0.9,
-        description: `${algorithm.toUpperCase()} has known vulnerabilities and should not be used`,
-        impact: 'critical' as const,
-        risk: 'high' as const
-      })
-      recommendations.push('Upgrade to AES-256 or ChaCha20 immediately')
-    } else if (algorithmStrength < 60) {
-      vulnerabilities.push(`${algorithm.toUpperCase()} algorithm has known weaknesses`)
-      recommendations.push('Consider upgrading to a more modern cipher like AES or ChaCha20')
-    }
+      // General recommendations
+      recommendations.push('Implement regular key rotation policy')
+      recommendations.push('Monitor encrypted data for anomalies')
+      
+      // Algorithm-specific recommendations
+      const algorithm = cipherState.algorithm.toLowerCase()
+      if (algorithm === 'aes') {
+        recommendations.push('Ensure you are using AES-256 with a proper mode (GCM recommended)')
+      } else if (algorithm === 'chacha20') {
+        recommendations.push('ChaCha20 is excellent - ensure proper nonce management')
+      }
 
-    // Analyze entropy
-    if (entropy < 3.5) {
-      vulnerabilities.push('Very low entropy detected - high pattern predictability')
-      predictions.push({
-        type: 'weakness',
-        confidence: 0.85,
-        description: 'Extremely low entropy suggests highly predictable patterns',
-        impact: 'high' as const,
-        risk: 'high' as const
-      })
-    } else if (entropy < 4.5) {
-      vulnerabilities.push('Low entropy detected - text may contain patterns')
-      predictions.push({
-        type: 'weakness',
-        confidence: 0.7,
-        description: 'Low entropy suggests some predictable patterns in the data',
-        impact: 'medium' as const,
-        risk: 'medium' as const
-      })
-    } else {
-      predictions.push({
-        type: 'strength',
-        confidence: 0.8,
-        description: 'Good entropy levels - no obvious patterns detected',
-        impact: 'low' as const,
-        risk: 'low' as const
-      })
-    }
+      // Calculate frequency analysis for display
+      const frequencyAnalysis = calculateFrequencyAnalysis(text)
 
-    // Frequency analysis recommendations
-    const frequencyAnalysis = calculateFrequencyAnalysis(text)
-    const topCharFreq = frequencyAnalysis[0]?.frequency || 0
-    if (topCharFreq > 15) {
-      vulnerabilities.push('High character frequency concentration detected')
-      recommendations.push('Consider using a different plaintext or encryption mode')
-    }
-
-    // General security recommendations
-    if (!vulnerabilities.length) {
-      recommendations.push('Security configuration appears robust')
-    }
-    recommendations.push('Implement regular key rotation policy')
-    recommendations.push('Monitor encrypted data for anomalies')
-    
-    // Algorithm-specific recommendations
-    if (algorithm === 'aes') {
-      recommendations.push('Ensure you are using AES-256 with a proper mode (GCM recommended)')
-    } else if (algorithm === 'chacha20') {
-      recommendations.push('ChaCha20 is excellent - ensure proper nonce management')
-    }
-
-    return { 
-      aiPredictions: predictions, 
-      vulnerabilities, 
-      recommendations,
-      frequencyAnalysis
+      return { 
+        aiPredictions: predictions, 
+        vulnerabilities, 
+        recommendations,
+        frequencyAnalysis
+      }
+    } catch (error) {
+      console.error('AI Analysis failed:', error)
+      return {
+        aiPredictions: [],
+        vulnerabilities: ['AI analysis temporarily unavailable'],
+        recommendations: ['Try again or contact support'],
+        frequencyAnalysis: []
+      }
     }
   }
 

@@ -2,7 +2,7 @@
 
 > **A modern, professional-grade cryptographic analysis and visualization tool designed for security professionals, researchers, and developers.**
 
-🌐 **[Live Demo on Vercel →](https://ai-cyber-cypher-bc9q.vercel.app)**
+🌐 **[Live Demo on Vercel →](https://ai-cyber-cypher.vercel.app/)**
 
 [![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
@@ -41,16 +41,34 @@
 
 ---
 
+## 🎯 Overview
+
 CyberCipher is a comprehensive cryptographic analysis platform that combines modern web technologies with advanced cryptographic algorithms. Built with React/TypeScript frontend and FastAPI backend, it provides real-time encryption/decryption, security analysis, and interactive visualizations for understanding cipher behavior and security metrics.
 
-### 🎯 Key Features
+### ✨ Key Features
 
 - **🔑 Advanced Key Generation** - Cryptographically secure key generation with multiple algorithms
 - **🔒 Multi-Algorithm Cipher Engine** - Support for RC4, AES, XOR, and custom ciphers
-- **📊 Real-Time Security Analysis** - Comprehensive entropy, pattern, and vulnerability analysis
-- **📈 Interactive Visualizations** - Dynamic charts for bit distribution, frequency analysis, and security metrics
+- **🧠 AI-Powered Security Analysis** - Context-aware vulnerability detection and recommendations
+- **� Interactive Visualizations** - Dynamic charts for bit distribution, frequency analysis, and security metrics
 - **🌐 Professional UI/UX** - Modern, responsive dashboard with dark/light theme support
-- **⚡ Live Processing** - Real-time encryption/decryption with immediate feedback
+- **⚡ Real-Time Processing** - Instant encryption/decryption with immediate feedback
+
+---
+
+## 📚 Documentation
+
+For comprehensive technical details, implementation guides, and architecture documentation, please refer to:
+
+**📖 [Technical Documentation](./TECHNICAL_DOCUMENTATION.md)**
+
+The technical documentation includes:
+- Detailed architecture analysis
+- Algorithm implementations and security analysis
+- API documentation and usage examples
+- Performance benchmarks and optimization guides
+- Security considerations and best practices
+- Future enhancements and roadmap
 
 ---
 

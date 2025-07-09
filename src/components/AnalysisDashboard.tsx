@@ -326,25 +326,49 @@ const AnalysisDashboard: React.FC<AnalysisDashboardProps> = ({ cipherState }) =>
             </div>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={350}>
               <PieChart>
                 <Pie
                   data={dashboardData.bitDistribution}
                   cx="50%"
                   cy="50%"
-                  outerRadius={80}
+                  labelLine={false}
+                  outerRadius={90}
+                  innerRadius={30}
                   dataKey="count"
-                  label={({ bit, percentage }) => `${bit}: ${percentage}%`}
                 >
                   {dashboardData.bitDistribution.map((_: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]}
+                      stroke="hsl(var(--background))"
+                      strokeWidth={2}
+                    />
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px'
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ backgroundColor: data.fill }}
+                            />
+                            <span className="font-semibold text-foreground">{data.bit}</span>
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            Count: <span className="font-medium text-foreground">{data.count}</span>
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            Percentage: <span className="font-medium text-foreground">{data.percentage}%</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
                 />
               </PieChart>

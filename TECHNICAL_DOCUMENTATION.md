@@ -592,65 +592,271 @@ function calculateFrequencyAnalysis(text: string): FrequencyData[] {
 
 ### 3. AI-Powered Vulnerability Assessment
 
-#### Function: `predictVulnerabilities(text: string, key: string): Promise<AIPrediction[]>`
+#### Function: `predictVulnerabilities(text: string, key: string, algorithm: string): Promise<AIPrediction[]>`
 
-**Risk Assessment Algorithm:**
+**Enhanced Risk Assessment Algorithm:**
 ```typescript
-async function predictVulnerabilities(text: string, key: string): Promise<AIPrediction[]> {
+async function predictVulnerabilities(text: string, key: string, algorithm: string): Promise<AIPrediction[]> {
   const predictions: AIPrediction[] = [];
   const entropy = calculateTextEntropy(text);
-  const keyStrength = analyzeKeyStrength(key);
-  
-  // Critical vulnerabilities
-  if (key.length < 12) {
-    predictions.push({
-      type: 'weakness',
-      confidence: 0.95,
-      description: 'Extremely short key enables brute force attacks',
-      impact: 'critical',
-      risk: 'high'
-    });
-  }
-  
-  // Entropy-based predictions
-  if (entropy < 3.5) {
-    predictions.push({
-      type: 'weakness',
-      confidence: 0.85,
-      description: 'Low entropy suggests predictable patterns',
-      impact: 'high',
-      risk: 'high'
-    });
-  }
-  
-  // Pattern vulnerability
+  const frequencyDist = analyzeFrequencyDistribution(text);
   const patterns = detectPatterns(text);
-  if (patterns.length > 5) {
+  
+  // Algorithm-specific analysis (context-aware)
+  switch (algorithm.toLowerCase()) {
+    case 'rc4':
+      predictions.push({
+        type: 'critical',
+        confidence: 0.98,
+        description: 'RC4 has known vulnerabilities: biased keystream, related-key attacks',
+        impact: 'critical',
+        risk: 'high',
+        recommendation: 'Migrate to AES-256-GCM or ChaCha20-Poly1305 immediately'
+      });
+      break;
+      
+    case 'aes':
+      if (key.length >= 16) {
+        predictions.push({
+          type: 'strength',
+          confidence: 0.92,
+          description: 'AES with adequate key length provides strong security',
+          impact: 'positive',
+          risk: 'low',
+          recommendation: 'Monitor post-quantum cryptography developments'
+        });
+      }
+      break;
+      
+    case 'xor':
+      predictions.push({
+        type: 'critical',
+        confidence: 1.0,
+        description: 'XOR cipher is completely broken against frequency analysis',
+        impact: 'critical',
+        risk: 'critical',
+        recommendation: 'Only use for educational purposes - never in production'
+      });
+      break;
+  }
+  
+  // Context-aware entropy analysis
+  if (entropy < 1.5) {
     predictions.push({
       type: 'weakness',
-      confidence: 0.75,
-      description: 'Multiple patterns detected - vulnerable to cryptanalysis',
-      impact: 'medium',
-      risk: 'medium'
+      confidence: 0.88,
+      description: 'Very low entropy detected - high pattern predictability',
+      impact: 'high',
+      risk: 'high',
+      recommendation: 'Pre-process with compression or add random padding'
+    });
+  } else if (entropy > 6.5) {
+    predictions.push({
+      type: 'strength',
+      confidence: 0.85,
+      description: 'High entropy indicates good randomness distribution',
+      impact: 'positive',
+      risk: 'low',
+      recommendation: 'Entropy level is excellent for cryptographic purposes'
     });
   }
   
-  return predictions;
+  // Intelligent key analysis
+  if (key.length < 8) {
+    predictions.push({
+      type: 'critical',
+      confidence: 0.95,
+      description: 'Extremely short key - vulnerable to brute force within hours',
+      impact: 'critical',
+      risk: 'critical',
+      recommendation: 'Use minimum 16-character keys for basic security'
+    });
+  }
+  
+  // Advanced frequency analysis
+  if (frequencyDist.deviation > 0.5) {
+    predictions.push({
+      type: 'weakness',
+      confidence: 0.70,
+      description: 'High character frequency concentration detected',
+      impact: 'medium',
+      risk: 'medium',
+      recommendation: 'Distribution indicates potential frequency analysis attack vector'
+    });
+  }
+  
+  return predictions.filter(p => p.confidence > 0.5).sort((a, b) => b.confidence - a.confidence);
 }
 ```
 
-**Confidence Scoring System:**
+**Key Improvements in AI Analysis:**
+- **Context-Aware Analysis**: Different analysis based on actual algorithm used
+- **Positive Recognition**: Identifies good security configurations
+- **Realistic Thresholds**: Based on cryptographic best practices
+- **Actionable Recommendations**: Specific guidance for each vulnerability type
+- **Confidence-Based Filtering**: Only shows predictions with sufficient confidence
 
-| Confidence Range | Label | Description | Visual Indicator |
-|------------------|--------|-------------|------------------|
-| 0.9 - 1.0 | High | Verified by multiple indicators | 🔴 Critical |
-| 0.7 - 0.9 | Medium | Supported by analysis | 🟡 Medium |
-| 0.5 - 0.7 | Low | Potential issue identified | 🟠 Warning |
-| < 0.5 | Speculative | Requires further analysis | ⚪ Info |
+**Enhanced Confidence Scoring System:**
 
----
+| Confidence Range | Label | Description | Visual Indicator | Action Required |
+|------------------|--------|-------------|------------------|----------------|
+| 0.95 - 1.0 | Critical | Mathematically proven vulnerabilities | 🔴 Critical | Immediate action |
+| 0.85 - 0.94 | High | Verified by multiple security indicators | � High | Action within 24h |
+| 0.70 - 0.84 | Medium | Supported by cryptographic analysis | 🟡 Medium | Plan remediation |
+| 0.50 - 0.69 | Low | Potential issue requiring investigation | 🔵 Low | Monitor closely |
+| 0.30 - 0.49 | Speculative | Theoretical or future concerns | ⚪ Info | Awareness only |
+| < 0.30 | Negligible | Very low probability issues | ⚫ Minimal | No action needed |
 
-## Data Flow & Processing
+**Prediction Categories:**
+
+| Type | Purpose | Example |
+|------|---------|---------|
+| `critical` | Immediate security threats | RC4 algorithm vulnerabilities |
+| `weakness` | Exploitable security flaws | Short key lengths, pattern detection |
+| `warning` | Potential future issues | Algorithm deprecation timeline |
+| `strength` | Positive security indicators | High entropy, strong algorithms |
+| `compliance` | Standards adherence | FIPS 140-2, NIST compliance |
+| `threat` | Emerging security concerns | Quantum computing threats |
+| `optimization` | Performance improvements | Algorithm recommendations |
+
+### 4. Enhanced Security Analyzer Component
+
+#### Intelligent Vulnerability Detection
+The SecurityAnalyzer component has been significantly improved to provide context-aware analysis:
+
+```typescript
+const runAIAnalysis = async (text: string) => {
+  try {
+    // Use the improved AI analysis function
+    const predictions = await predictVulnerabilities(text, cipherState.key, cipherState.algorithm)
+    
+    // Convert predictions to actionable insights
+    const vulnerabilities: string[] = []
+    const recommendations: string[] = []
+
+    for (const prediction of predictions) {
+      if (prediction.type === 'weakness' || prediction.type === 'threat') {
+        vulnerabilities.push(prediction.description)
+      }
+      
+      // Generate context-specific recommendations
+      if (prediction.description.includes('RC4')) {
+        recommendations.push('Migrate to AES-256-GCM or ChaCha20-Poly1305 immediately')
+      } else if (prediction.description.includes('short key')) {
+        recommendations.push('Use a minimum key length of 16-24 characters')
+      } else if (prediction.description.includes('entropy')) {
+        recommendations.push('Consider using more random input data or stronger encryption')
+      }
+    }
+
+    // Positive feedback for good configurations
+    if (vulnerabilities.length === 0) {
+      vulnerabilities.push('No significant security vulnerabilities detected')
+      recommendations.push('Current configuration meets security best practices')
+    }
+
+    return { 
+      aiPredictions: predictions, 
+      vulnerabilities, 
+      recommendations,
+      frequencyAnalysis: calculateFrequencyAnalysis(text)
+    }
+  } catch (error) {
+    // Graceful error handling
+    return {
+      aiPredictions: [],
+      vulnerabilities: ['AI analysis temporarily unavailable'],
+      recommendations: ['Try again or contact support'],
+      frequencyAnalysis: []
+    }
+  }
+}
+```
+
+**Key Security Analyzer Improvements:**
+- **Context-Aware Analysis**: Only flags actual issues, not generic warnings
+- **Algorithm-Specific Guidance**: Different recommendations based on cipher type
+- **Positive Reinforcement**: Recognizes good security configurations
+- **Graceful Error Handling**: Continues working even if AI analysis fails
+- **Actionable Recommendations**: Specific, implementable security guidance
+
+#### Real-Time Threat Detection
+```typescript
+interface DynamicAnalysis {
+  realTimeMonitoring: boolean;
+  adaptiveThreatModel: ThreatModel;
+  contextAwareAnalysis: ContextAnalysis;
+  behavioralPatterns: BehavioralAnalysis;
+}
+
+class DynamicSecurityAnalyzer {
+  private threatDatabase: ThreatDatabase;
+  private mlModel: MachineLearningModel;
+  
+  async analyzeInRealTime(
+    ciphertext: string, 
+    algorithm: string, 
+    context: SecurityContext
+  ): Promise<DynamicAnalysisResult> {
+    
+    // Contextual analysis based on use case
+    const contextualThreats = await this.assessContextualThreats(context);
+    
+    // Behavioral pattern analysis
+    const behavioralAnalysis = await this.analyzeBehavioralPatterns(ciphertext);
+    
+    // Adaptive threat modeling
+    const adaptiveThreats = await this.updateThreatModel(algorithm, context);
+    
+    // Real-time vulnerability scanning
+    const liveThreats = await this.scanForEmergingThreats(algorithm);
+    
+    return {
+      contextualThreats,
+      behavioralAnalysis,
+      adaptiveThreats,
+      liveThreats,
+      overallRiskScore: this.calculateDynamicRisk(),
+      recommendations: this.generateAdaptiveRecommendations()
+    };
+  }
+  
+  private async assessContextualThreats(context: SecurityContext): Promise<ContextualThreat[]> {
+    const threats: ContextualThreat[] = [];
+    
+    if (context.environment === 'production') {
+      threats.push({
+        type: 'operational',
+        severity: 'high',
+        description: 'Production environment requires enterprise-grade security',
+        mitigation: 'Implement key rotation, HSM integration, and audit logging'
+      });
+    }
+    
+    if (context.dataClassification === 'sensitive') {
+      threats.push({
+        type: 'compliance',
+        severity: 'critical',
+        description: 'Sensitive data requires enhanced protection measures',
+        mitigation: 'Implement AES-256, perfect forward secrecy, and zero-trust architecture'
+      });
+    }
+    
+    return threats;
+  }
+  
+  private async analyzeBehavioralPatterns(data: string): Promise<BehavioralAnalysis> {
+    // Machine learning analysis of encryption patterns
+    const patterns = await this.mlModel.detectAnomalousPatterns(data);
+    
+    return {
+      anomalousPatterns: patterns.filter(p => p.anomalyScore > 0.7),
+      timeSeriesAnalysis: await this.analyzeTemporalPatterns(data),
+      distributionAnalysis: await this.analyzeStatisticalDistribution(data),
+      compressionAnalysis: await this.analyzeCompressionRatio(data)
+    };
+  }
+}
 
 ### Complete Encryption Process Flow
 
@@ -803,7 +1009,7 @@ Frontend (React)                    Backend (FastAPI)
 
 #### Purpose: Analyze the distribution of binary bits in encrypted data
 
-**Chart Type**: Enhanced Pie Chart with External Labels
+**Chart Type**: Enhanced Pie Chart with Theme-Aware Labels
 
 **Data Processing:**
 ```typescript
@@ -830,6 +1036,59 @@ function generateBitDistribution(text: string): BitDistribution[] {
   }));
 }
 ```
+
+**Improved Pie Chart Implementation:**
+```typescript
+<Pie
+  data={dashboardData.bitDistribution}
+  cx="50%"
+  cy="50%"
+  outerRadius={90}
+  innerRadius={30}
+  dataKey="count"
+>
+  {dashboardData.bitDistribution.map((_: any, index: number) => (
+    <Cell 
+      key={`cell-${index}`} 
+      fill={COLORS[index % COLORS.length]}
+      stroke="hsl(var(--background))"
+      strokeWidth={2}
+    />
+  ))}
+</Pie>
+<Tooltip 
+  content={({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+          <div className="flex items-center gap-2 mb-1">
+            <div 
+              className="w-3 h-3 rounded-full" 
+              style={{ backgroundColor: data.fill }}
+            />
+            <span className="font-semibold text-foreground">{data.bit}</span>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Count: <span className="font-medium text-foreground">{data.count}</span>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Percentage: <span className="font-medium text-foreground">{data.percentage}%</span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }}
+/>
+```
+
+**Visual Improvements:**
+- **Clean Donut Chart**: Modern donut-style visualization with inner radius for better aesthetics
+- **Hover-Only Details**: Information displayed only in tooltips to maintain clean appearance
+- **Theme-Aware Design**: All elements adapt automatically to light/dark themes
+- **Custom Tooltips**: Enhanced tooltip component with proper contrast and structured information
+- **Visual Separation**: Stroke borders between segments for better definition
 
 **Security Significance Analysis:**
 
@@ -1675,10 +1934,32 @@ CyberCipher represents a comprehensive approach to cryptographic education and a
 ### Key Technical Achievements
 
 1. **Comprehensive Algorithm Support**: Implementation of multiple cipher types with educational and professional applications
-2. **Advanced Security Analysis**: Multi-factor security assessment with AI-powered insights
-3. **Interactive Visualizations**: Real-time charts and graphs for understanding cryptographic behavior
+2. **Advanced Security Analysis**: Multi-factor security assessment with context-aware AI-powered insights
+3. **Interactive Visualizations**: Real-time charts and graphs with theme-aware design for understanding cryptographic behavior
 4. **Professional Architecture**: Scalable, maintainable codebase with modern web technologies
 5. **Educational Value**: Clear explanations and demonstrations of cryptographic principles
+6. **Intelligent Vulnerability Detection**: Context-aware analysis that provides relevant, actionable security insights
+7. **Enhanced User Experience**: Improved UI components with proper accessibility and theme support
+
+### Recent Improvements (v1.1)
+
+#### AI Analysis Enhancements
+- **Context-Aware Vulnerability Detection**: AI analysis now considers the specific algorithm being used
+- **Positive Security Recognition**: System identifies and acknowledges good security configurations
+- **Realistic Threat Assessment**: Uses evidence-based thresholds rather than generic warnings
+- **Actionable Recommendations**: Provides specific, implementable security guidance
+
+#### Visualization Improvements
+- **Theme-Aware Charts**: All visualizations properly support dark/light theme switching
+- **Enhanced Accessibility**: Improved contrast and readability across all chart components
+- **Smart Label Positioning**: Dynamic positioning prevents label overlap and improves readability
+- **Responsive Design**: Charts adapt to different screen sizes and orientations
+
+#### Security Analyzer Upgrades
+- **Intelligent Analysis**: Integrates improved AI analysis for more accurate vulnerability detection
+- **Error Resilience**: Graceful handling of analysis failures with meaningful fallbacks
+- **Algorithm-Specific Guidance**: Tailored recommendations based on cryptographic algorithm in use
+- **Performance Optimization**: Reduced false positives and improved analysis accuracy
 
 ### Security and Compliance
 

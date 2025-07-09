@@ -16,73 +16,138 @@ export async function analyzeText(text: string): Promise<PatternAnalysis> {
   }
 }
 
-// Predict vulnerabilities using AI techniques
-export async function predictVulnerabilities(text: string, key: string): Promise<AIPrediction[]> {
+// Predict vulnerabilities using AI techniques with algorithm awareness
+export async function predictVulnerabilities(text: string, key: string, algorithm: string = 'unknown'): Promise<AIPrediction[]> {
   const predictions: AIPrediction[] = []
   
-  // Analyze key weakness
-  if (key.length < 16) {
+  // Calculate metrics for analysis
+  const entropy = calculateTextEntropy(text)
+  const frequencyDist = analyzeFrequencyDistribution(text)
+  const patterns = findRepeatingPatterns(text)
+  
+  // Algorithm-specific analysis (only add if algorithm is actually problematic)
+  if (algorithm.toLowerCase() === 'rc4') {
+    // Only warn about RC4 if it's actually being used
     predictions.push({
       type: 'weakness',
-      confidence: 0.85,
-      description: 'Short key length detected. Vulnerable to brute force attacks.',
+      confidence: 0.95,
+      description: 'RC4 algorithm has known vulnerabilities (biased keystream, related-key attacks)',
       impact: 'high',
       risk: 'high'
     })
   }
   
-  // Analyze text patterns
-  const entropy = calculateTextEntropy(text)
-  if (entropy < 3.5) {
+  // Key analysis - be more specific about thresholds
+  if (key.length < 8) {
     predictions.push({
       type: 'weakness',
-      confidence: 0.72,
-      description: 'Low entropy detected. Text may have predictable patterns.',
+      confidence: 0.95,
+      description: 'Extremely short key - vulnerable to brute force within hours',
+      impact: 'high',
+      risk: 'high'
+    })
+  } else if (key.length < 12 && algorithm.toLowerCase() !== 'xor') {
+    predictions.push({
+      type: 'weakness',
+      confidence: 0.80,
+      description: 'Short key length - consider using 16+ characters for better security',
       impact: 'medium',
       risk: 'medium'
     })
   }
   
-  // Analyze frequency distribution
-  const frequencyDist = analyzeFrequencyDistribution(text)
-  if (frequencyDist.deviation > 0.3) {
+  // Entropy analysis - more nuanced thresholds
+  if (entropy < 1.5) {
     predictions.push({
       type: 'weakness',
-      confidence: 0.68,
-      description: 'Uneven character distribution suggests weak encryption.',
+      confidence: 0.88,
+      description: 'Very low entropy detected - high pattern predictability',
+      impact: 'high',
+      risk: 'high'
+    })
+  } else if (entropy < 3.0 && algorithm.toLowerCase() !== 'xor') {
+    predictions.push({
+      type: 'weakness',
+      confidence: 0.65,
+      description: 'Low entropy - text may contain predictable patterns',
       impact: 'medium',
       risk: 'medium'
     })
-  }
-  
-  // Positive predictions
-  if (entropy > 7.0) {
+  } else if (entropy > 6.5) {
     predictions.push({
       type: 'strength',
-      confidence: 0.91,
-      description: 'High entropy indicates good randomness properties.',
+      confidence: 0.85,
+      description: 'High entropy indicates good randomness distribution',
       impact: 'low',
       risk: 'low'
     })
   }
   
-  // Optimization suggestions
-  predictions.push({
-    type: 'optimization',
-    confidence: 0.76,
-    description: 'Consider using ChaCha20 for better performance and security.',
-    impact: 'low',
-    risk: 'low'
-  })
+  // Frequency analysis - only flag if significantly uneven
+  if (frequencyDist.deviation > 0.5) {
+    predictions.push({
+      type: 'weakness',
+      confidence: 0.70,
+      description: 'High character frequency concentration detected',
+      impact: 'medium',
+      risk: 'medium'
+    })
+  }
   
-  // Quantum threats
-  predictions.push({
-    type: 'threat',
-    confidence: 0.45,
-    description: 'Current algorithm may be vulnerable to future quantum attacks.',
-    impact: 'high',
-    risk: 'medium'
-  })
+  // Pattern analysis - only flag if many patterns
+  if (patterns.length > 8) {
+    predictions.push({
+      type: 'weakness',
+      confidence: 0.75,
+      description: `${patterns.length} repeating patterns detected - may indicate weak encryption`,
+      impact: 'medium',
+      risk: 'medium'
+    })
+  }
+  
+  // Positive assessments for good configurations
+  if (algorithm.toLowerCase() === 'aes' && key.length >= 16) {
+    predictions.push({
+      type: 'strength',
+      confidence: 0.90,
+      description: 'AES with adequate key length provides strong security',
+      impact: 'low',
+      risk: 'low'
+    })
+  }
+  
+  // Only suggest optimizations if there are actual issues
+  if (algorithm.toLowerCase() === 'rc4' || (entropy < 4.0 && key.length < 16)) {
+    predictions.push({
+      type: 'optimization',
+      confidence: 0.76,
+      description: 'Consider using AES-256 or ChaCha20 for enhanced security',
+      impact: 'low',
+      risk: 'low'
+    })
+  }
+  
+  // Quantum threats - only for algorithms that will be affected
+  if (algorithm.toLowerCase() === 'aes' && key.length < 32) {
+    predictions.push({
+      type: 'threat',
+      confidence: 0.60,
+      description: 'AES-128/192 security reduced by ~50% against quantum computers',
+      impact: 'medium',
+      risk: 'medium'
+    })
+  }
+  
+  // If no significant issues found, add positive feedback
+  if (predictions.length === 0 || predictions.every(p => p.type === 'strength')) {
+    predictions.push({
+      type: 'strength',
+      confidence: 0.80,
+      description: 'No significant vulnerabilities detected in current configuration',
+      impact: 'low',
+      risk: 'low'
+    })
+  }
   
   return predictions
 }
@@ -189,17 +254,40 @@ function calculateTextEntropy(text: string): number {
 }
 
 function analyzeFrequencyDistribution(text: string) {
+  if (!text || text.length < 2) {
+    return { average: 0, variance: 0, deviation: 0 }
+  }
+  
   const freq: { [key: string]: number } = {}
   for (const char of text) {
     freq[char] = (freq[char] || 0) + 1
   }
   
   const frequencies = Object.values(freq)
+  const uniqueChars = frequencies.length
+  
+  // For good encryption, we expect roughly uniform distribution
+  const expectedFreq = text.length / uniqueChars
+  
+  // Calculate chi-square-like deviation
+  let chiSquareSum = 0
+  for (const f of frequencies) {
+    chiSquareSum += Math.pow(f - expectedFreq, 2) / expectedFreq
+  }
+  
+  // Normalize deviation (0 = perfect uniform, 1 = highly skewed)
+  const deviation = Math.min(1, chiSquareSum / uniqueChars)
+  
   const average = frequencies.reduce((a, b) => a + b, 0) / frequencies.length
   const variance = frequencies.reduce((sum, f) => sum + Math.pow(f - average, 2), 0) / frequencies.length
-  const deviation = Math.sqrt(variance) / average
   
-  return { average, variance, deviation }
+  return { 
+    average, 
+    variance, 
+    deviation: deviation,
+    uniqueChars,
+    expectedFreq
+  }
 }
 
 function calculateKeyStrength(key: string): number {
@@ -230,10 +318,15 @@ function calculateKeyStrength(key: string): number {
 
 function getAlgorithmStrength(algorithm: string): number {
   const strengths: { [key: string]: number } = {
-    'rc4': 60,  // Known weaknesses
-    'chacha20': 95,  // Modern, secure
-    'aes': 90,  // Well-tested, secure
-    'salsa20': 85  // Good but older
+    'rc4': 25,      // Seriously broken
+    'xor': 10,      // Educational only
+    'caesar': 5,    // Historical curiosity
+    'aes': 95,      // Gold standard
+    'chacha20': 92, // Modern alternative
+    'salsa20': 85,  // Good but older
+    'des': 15,      // Broken
+    'triple_des': 45, // Legacy support only
+    'blowfish': 70  // Decent but aging
   }
   
   return strengths[algorithm.toLowerCase()] || 50
