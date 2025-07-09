@@ -33,7 +33,7 @@
 - **Advanced Key Generation**: Cryptographically secure random key generation with entropy analysis
 - **Real-Time Security Analysis**: Shannon entropy calculation, pattern detection, vulnerability assessment
 - **Interactive Visualizations**: Frequency analysis, bit distribution, security metrics dashboards
-- **AI-Powered Insights**: Machine learning-inspired security predictions and recommendations
+- **Insights**: Machine learning-inspired security predictions and recommendations
 
 ### Target Audience:
 - **Security Professionals**: For cryptographic analysis and vulnerability assessment
@@ -569,7 +569,7 @@ function calculateFrequencyAnalysis(text: string): FrequencyData[] {
 - **Entropy Validation**: Confirms randomness quality and distribution uniformity
 - **Pattern Recognition**: Identifies repeated sequences and structural weaknesses
 
-### 3. AI-Powered Vulnerability Assessment
+### 3. Vulnerability Assessment
 
 #### Function: `predictVulnerabilities(text: string, key: string, algorithm: string): Promise<AIPrediction[]>`
 
@@ -666,7 +666,7 @@ async function predictVulnerabilities(text: string, key: string, algorithm: stri
 }
 ```
 
-**Key Improvements in AI Analysis:**
+**Key Improvements in Analysis:**
 - **Context-Aware Analysis**: Different analysis based on actual algorithm used
 - **Positive Recognition**: Identifies good security configurations
 - **Realistic Thresholds**: Based on cryptographic best practices
@@ -704,7 +704,7 @@ The SecurityAnalyzer component has been significantly improved to provide contex
 ```typescript
 const runAIAnalysis = async (text: string) => {
   try {
-    // Use the improved AI analysis function
+    // Use the improved  analysis function
     const predictions = await predictVulnerabilities(text, cipherState.key, cipherState.algorithm)
     
     // Convert predictions to actionable insights
@@ -742,7 +742,7 @@ const runAIAnalysis = async (text: string) => {
     // Graceful error handling
     return {
       aiPredictions: [],
-      vulnerabilities: ['AI analysis temporarily unavailable'],
+      vulnerabilities: ['Analysis temporarily unavailable'],
       recommendations: ['Try again or contact support'],
       frequencyAnalysis: []
     }
@@ -754,7 +754,7 @@ const runAIAnalysis = async (text: string) => {
 - **Context-Aware Analysis**: Only flags actual issues, not generic warnings
 - **Algorithm-Specific Guidance**: Different recommendations based on cipher type
 - **Positive Reinforcement**: Recognizes good security configurations
-- **Graceful Error Handling**: Continues working even if AI analysis fails
+- **Graceful Error Handling**: Continues working even if analysis fails
 - **Actionable Recommendations**: Specific, implementable security guidance
 
 #### Real-Time Threat Detection
@@ -851,7 +851,7 @@ graph TD
     
     F --> G[🛡️ Security Analysis<br/>• Entropy Calculation<br/>• Pattern Detection<br/>• Frequency Analysis]
     
-    G --> H[🤖 AI Assessment<br/>• Vulnerability Detection<br/>• Predictions<br/>• Recommendations]
+    G --> H[🤖 Assessment<br/>• Vulnerability Detection<br/>• Predictions<br/>• Recommendations]
     
     H --> I[📈 Visualization<br/>• Charts & Graphs<br/>• Security Dashboard<br/>• Export Data]
     
@@ -887,7 +887,7 @@ graph TD
          │                       │                       │
          ▼                       ▼                       ▼
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│🛡️Security Analysis│    │ 🤖 AI Assessment │    │ 📈 Visualization │
+│🛡️Security Analysis│    │ 🤖  Assessment │    │ 📈 Visualization│
 │ • Entropy Calc. │    │ • Vulnerability │    │ • Charts/Graphs │
 │ • Pattern Detect│───▶│ • Predictions   │───▶│ • Security Dash │
 │ • Freq. Analysis│    │ • Recommend.    │    │ • Export Data   │
@@ -932,7 +932,7 @@ sequenceDiagram
     SA->>SA: Entropy calculation
     SA->>SA: Pattern detection
     SA->>SA: Frequency analysis
-    SA->>+ML: AI vulnerability assessment
+    SA->>+ML: Vulnerability assessment
     ML->>ML: Machine learning inference
     ML->>-SA: Vulnerability predictions
     SA->>-API: Complete analysis results
@@ -969,7 +969,7 @@ Frontend (React)                    Backend (FastAPI)
       │                                    │──── � Security Analysis
       │                                    │     • Entropy Calculation
       │                                    │     • Pattern Detection
-      │◀─── {metrics, predictions} ────────│     • 🤖 AI Assessment
+      │◀─── {metrics, predictions} ────────│     • 🤖 Assessment
       │                                    │     • Recommendations
       │                                    │
       │──── 📈 POST /visualization/generate ▶│
@@ -1905,7 +1905,7 @@ CyberCipher represents a comprehensive approach to cryptographic education and a
 ### Key Technical Achievements
 
 1. **Comprehensive Algorithm Support**: Implementation of multiple cipher types with educational and professional applications
-2. **Advanced Security Analysis**: Multi-factor security assessment with context-aware AI-powered insights
+2. **Advanced Security Analysis**: Multi-factor security assessment with context-aware insights
 3. **Interactive Visualizations**: Real-time charts and graphs with theme-aware design for understanding cryptographic behavior
 4. **Professional Architecture**: Scalable, maintainable codebase with modern web technologies
 5. **Educational Value**: Clear explanations and demonstrations of cryptographic principles
@@ -1914,8 +1914,8 @@ CyberCipher represents a comprehensive approach to cryptographic education and a
 
 ### Recent Improvements (v1.1)
 
-#### AI Analysis Enhancements
-- **Context-Aware Vulnerability Detection**: AI analysis now considers the specific algorithm being used
+#### Analysis Enhancements
+- **Context-Aware Vulnerability Detection**: analysis now considers the specific algorithm being used
 - **Positive Security Recognition**: System identifies and acknowledges good security configurations
 - **Realistic Threat Assessment**: Uses evidence-based thresholds rather than generic warnings
 - **Actionable Recommendations**: Provides specific, implementable security guidance
@@ -1927,7 +1927,7 @@ CyberCipher represents a comprehensive approach to cryptographic education and a
 - **Responsive Design**: Charts adapt to different screen sizes and orientations
 
 #### Security Analyzer Upgrades
-- **Intelligent Analysis**: Integrates improved AI analysis for more accurate vulnerability detection
+- **Intelligent Analysis**: Integrates improved analysis for more accurate vulnerability detection
 - **Error Resilience**: Graceful handling of analysis failures with meaningful fallbacks
 - **Algorithm-Specific Guidance**: Tailored recommendations based on cryptographic algorithm in use
 - **Performance Optimization**: Reduced false positives and improved analysis accuracy

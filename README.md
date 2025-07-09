@@ -1,8 +1,8 @@
-# 🔐 CyberCipher - AI-Enhanced Cryptographic Analysis Platform
+# 🔐 CyberCipher - Enhanced Cryptographic Analysis Platform
 
 > **A modern, professional-grade cryptographic analysis and visualization tool designed for security professionals, researchers, and developers.**
 
-🌐 **[Live Demo on Vercel →](https://ai-cyber-cypher.vercel.app/)**
+🌐 **[Live Demo on Vercel →](https://cyber-cypher.vercel.app/)**
 
 [![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
@@ -85,7 +85,7 @@ The technical documentation includes:
 
 1. **Clone the Repository**
    ```bash
-   git clone <https://github.com/anirudh-tyagi/ai-cyber-cypher>
+   git clone <https://github.com/anirudh-tyagi/cyber-cypher>
    cd ai-cyber-cypher
    ```
 
@@ -179,7 +179,7 @@ backend/
 **Purpose**: Generate cryptographically secure keys for encryption operations.
 
 **Features**:
-- **Multiple Key Types**: Random, Quantum-Safe, AI-Enhanced
+- **Multiple Key Types**: Random, Quantum-Safe, Enhanced
 - **Configurable Length**: 8-512 characters
 - **Entropy Levels**: 128-bit, 256-bit, 512-bit
 - **Character Sets**: Include/exclude symbols
@@ -276,7 +276,7 @@ interface AnalysisResults {
 #### **Security Metrics Overview**
 - **Type**: Stat Cards Grid
 - **Data**: Key metrics summary
-- **Metrics**: Overall score, entropy, randomness, AI insights
+- **Metrics**: Overall score, entropy, randomness, insights
 - **Features**: Color-coded indicators, trend visualization
 
 ---
