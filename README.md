@@ -93,8 +93,8 @@ The technical documentation includes:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/anirudh-tyagi/ai-cyber-cypher.git
-   cd ai-cyber-cypher
+   git clone https://github.com/anirudh-tyagi/cyber-cypher.git
+   cd cyber-cypher
    ```
 
 2. **Frontend Setup**
