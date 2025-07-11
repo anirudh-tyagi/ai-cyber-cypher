@@ -196,10 +196,13 @@ backend/
 - **TypeScript 5.2** - Type-safe JavaScript development
 - **Vite 4.5** - Fast build tool and dev server
 - **Tailwind CSS 3.3** - Utility-first CSS framework
-- **Framer Motion** - Animation library
-- **Recharts** - Data visualization charts
-- **Radix UI** - Accessible component primitives
-- **Lucide React** - Beautiful icon library
+- **Framer Motion 10.16** - Animation library for smooth interactions
+- **Recharts 2.8** - Data visualization charts
+- **Radix UI** - Accessible component primitives (Dialog, Select, Tabs, Tooltip)
+- **Lucide React 0.294** - Beautiful icon library
+- **React Hot Toast 2.4** - Toast notifications
+- **Crypto-js 4.2** - Cryptographic functions
+- **Class Variance Authority** - Conditional styling utility
 
 **Backend:**
 - **FastAPI** - Modern, high-performance Python web framework
@@ -207,9 +210,10 @@ backend/
 - **Uvicorn** - ASGI server for production deployment
 
 **Development Tools:**
-- **ESLint** - Code linting and quality assurance
-- **PostCSS** - CSS processing and optimization
-- **TypeScript Compiler** - Type checking and compilation
+- **ESLint 8.53** - Code linting and quality assurance
+- **PostCSS 8.4** - CSS processing and optimization
+- **Autoprefixer 10.4** - CSS vendor prefixing
+- **TypeScript 5.2** - Type checking and compilation
 
 ---
 
