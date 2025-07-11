@@ -33,7 +33,7 @@
 - **Advanced Key Generation**: Cryptographically secure random key generation with entropy analysis
 - **Real-Time Security Analysis**: Shannon entropy calculation, pattern detection, vulnerability assessment
 - **Interactive Visualizations**: Frequency analysis, bit distribution, security metrics dashboards
-- **Insights**: Machine learning-inspired security predictions and recommendations
+- **Intelligent Insights**: Statistical analysis and rule-based security predictions and recommendations
 
 ### Target Audience:
 - **Security Professionals**: For cryptographic analysis and vulnerability assessment
@@ -261,7 +261,7 @@ function chacha20Encrypt(plaintext: string, key: string, nonce?: string): string
 ```typescript
 interface KeyGenerationOptions {
   length: number;        // 8-512 characters
-  type: 'random' | 'quantum' | 'neural';
+  type: 'random' | 'quantum' | 'enhanced';
   entropy: 128 | 256 | 512;  // bits
   includeSymbols: boolean;
   quantumSafe: boolean;
@@ -571,12 +571,12 @@ function calculateFrequencyAnalysis(text: string): FrequencyData[] {
 
 ### 3. Vulnerability Assessment
 
-#### Function: `predictVulnerabilities(text: string, key: string, algorithm: string): Promise<AIPrediction[]>`
+#### Function: `predictVulnerabilities(text: string, key: string, algorithm: string): Promise<SecurityPrediction[]>`
 
 **Enhanced Risk Assessment Algorithm:**
 ```typescript
-async function predictVulnerabilities(text: string, key: string, algorithm: string): Promise<AIPrediction[]> {
-  const predictions: AIPrediction[] = [];
+async function predictVulnerabilities(text: string, key: string, algorithm: string): Promise<SecurityPrediction[]> {
+  const predictions: SecurityPrediction[] = [];
   const entropy = calculateTextEntropy(text);
   const frequencyDist = analyzeFrequencyDistribution(text);
   const patterns = detectPatterns(text);
@@ -702,9 +702,9 @@ async function predictVulnerabilities(text: string, key: string, algorithm: stri
 The SecurityAnalyzer component has been significantly improved to provide context-aware analysis:
 
 ```typescript
-const runAIAnalysis = async (text: string) => {
+const runSecurityAnalysis = async (text: string) => {
   try {
-    // Use the improved  analysis function
+    // Use the improved statistical analysis function
     const predictions = await predictVulnerabilities(text, cipherState.key, cipherState.algorithm)
     
     // Convert predictions to actionable insights
@@ -733,7 +733,7 @@ const runAIAnalysis = async (text: string) => {
     }
 
     return { 
-      aiPredictions: predictions, 
+      securityPredictions: predictions, 
       vulnerabilities, 
       recommendations,
       frequencyAnalysis: calculateFrequencyAnalysis(text)
@@ -741,7 +741,7 @@ const runAIAnalysis = async (text: string) => {
   } catch (error) {
     // Graceful error handling
     return {
-      aiPredictions: [],
+      securityPredictions: [],
       vulnerabilities: ['Analysis temporarily unavailable'],
       recommendations: ['Try again or contact support'],
       frequencyAnalysis: []
@@ -823,8 +823,8 @@ class DynamicSecurityAnalyzer {
   }
   
   private async analyzeBehavioralPatterns(data: string): Promise<BehavioralAnalysis> {
-    // Machine learning analysis of encryption patterns
-    const patterns = await this.mlModel.detectAnomalousPatterns(data);
+    // Statistical analysis of encryption patterns
+    const patterns = await this.statisticalModel.detectAnomalousPatterns(data);
     
     return {
       anomalousPatterns: patterns.filter(p => p.anomalyScore > 0.7),
@@ -932,9 +932,9 @@ sequenceDiagram
     SA->>SA: Entropy calculation
     SA->>SA: Pattern detection
     SA->>SA: Frequency analysis
-    SA->>+ML: Vulnerability assessment
-    ML->>ML: Machine learning inference
-    ML->>-SA: Vulnerability predictions
+    SA->>+SA: Vulnerability assessment
+    SA->>SA: Statistical analysis
+    SA->>-SA: Security predictions
     SA->>-API: Complete analysis results
     API->>-FE: {metrics, predictions, recommendations}
 
@@ -1657,7 +1657,7 @@ class CryptoWorkerPool {
 | Phase | Timeline | Features | Priority |
 |-------|----------|----------|----------|
 | Phase 1 | Q3 2025 | Post-Quantum Cryptography | 🔴 High |
-| Phase 2 | Q4 2025 | ML Security Assessment | 🟡 Medium |
+| Phase 2 | Q4 2025 | Advanced Statistical Analysis | 🟡 Medium |
 | Phase 3 | Q1 2026 | 3D Visualizations | 🟢 Low |
 | Phase 4 | Q2 2026 | Enterprise Features | 🟡 Medium |
 
@@ -1721,19 +1721,19 @@ const privateAnalysis = {
 };
 ```
 
-### 2. Machine Learning Integration
+### 2. Advanced Statistical Analysis
 
-#### Intelligent Security Assessment
+#### Enhanced Security Assessment
 ```typescript
-interface MLSecurityAnalyzer {
-  model: TensorFlowModel;
+interface StatisticalSecurityAnalyzer {
+  analysisEngine: StatisticalEngine;
   
-  async predictVulnerabilities(ciphertext: string): Promise<MLPrediction[]> {
+  async predictVulnerabilities(ciphertext: string): Promise<StatisticalPrediction[]> {
     // Convert ciphertext to feature vector
     const features = this.extractFeatures(ciphertext);
     
-    // Run ML model inference
-    const predictions = await this.model.predict(features);
+    // Run statistical analysis
+    const predictions = await this.analysisEngine.analyze(features);
     
     return this.interpretPredictions(predictions);
   }
@@ -1753,7 +1753,7 @@ interface MLSecurityAnalyzer {
 #### Adaptive Security Recommendations
 ```typescript
 class AdaptiveSecurityEngine {
-  private learningModel: ReinforcementLearningModel;
+  private analysisModel: StatisticalAnalysisModel;
   
   async generatePersonalizedRecommendations(
     userProfile: SecurityProfile,
@@ -1761,13 +1761,13 @@ class AdaptiveSecurityEngine {
   ): Promise<AdaptiveRecommendation[]> {
     
     const riskAssessment = await this.assessRisk(userProfile, currentImplementation);
-    const optimalConfiguration = await this.learningModel.recommend(riskAssessment);
+    const optimalConfiguration = await this.analysisModel.recommend(riskAssessment);
     
     return this.generateActionableSteps(optimalConfiguration);
   }
   
   async updateModel(feedback: UserFeedback): Promise<void> {
-    // Continuous learning from user interactions
+    // Continuous improvement from user interactions
     await this.learningModel.train(feedback);
   }
 }
@@ -1909,13 +1909,13 @@ CyberCipher represents a comprehensive approach to cryptographic education and a
 3. **Interactive Visualizations**: Real-time charts and graphs with theme-aware design for understanding cryptographic behavior
 4. **Professional Architecture**: Scalable, maintainable codebase with modern web technologies
 5. **Educational Value**: Clear explanations and demonstrations of cryptographic principles
-6. **Intelligent Vulnerability Detection**: Context-aware analysis that provides relevant, actionable security insights
+6. **Intelligent Vulnerability Detection**: Context-aware analysis that provides relevant, actionable security insights using statistical methods
 7. **Enhanced User Experience**: Improved UI components with proper accessibility and theme support
 
 ### Recent Improvements (v1.1)
 
 #### Analysis Enhancements
-- **Context-Aware Vulnerability Detection**: analysis now considers the specific algorithm being used
+- **Context-Aware Vulnerability Detection**: Statistical analysis now considers the specific algorithm being used
 - **Positive Security Recognition**: System identifies and acknowledges good security configurations
 - **Realistic Threat Assessment**: Uses evidence-based thresholds rather than generic warnings
 - **Actionable Recommendations**: Provides specific, implementable security guidance
@@ -1927,7 +1927,7 @@ CyberCipher represents a comprehensive approach to cryptographic education and a
 - **Responsive Design**: Charts adapt to different screen sizes and orientations
 
 #### Security Analyzer Upgrades
-- **Intelligent Analysis**: Integrates improved analysis for more accurate vulnerability detection
+- **Intelligent Analysis**: Integrates improved statistical analysis for more accurate vulnerability detection
 - **Error Resilience**: Graceful handling of analysis failures with meaningful fallbacks
 - **Algorithm-Specific Guidance**: Tailored recommendations based on cryptographic algorithm in use
 - **Performance Optimization**: Reduced false positives and improved analysis accuracy
@@ -1938,7 +1938,7 @@ The platform adheres to modern security best practices while maintaining educati
 
 ### Future Potential
 
-The modular architecture enables continuous enhancement with emerging cryptographic technologies, including post-quantum cryptography, homomorphic encryption, and advanced machine learning integration.
+The modular architecture enables continuous enhancement with emerging cryptographic technologies, including post-quantum cryptography, homomorphic encryption, and advanced statistical analysis integration.
 
 CyberCipher bridges the gap between cryptographic theory and practical application, providing a valuable tool for understanding and analyzing modern cryptographic systems in an increasingly security-conscious world.
 

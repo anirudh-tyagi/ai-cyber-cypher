@@ -1,28 +1,28 @@
 import { KeyGenerationOptions } from '../types/cipher'
 
-// Simulate quantum-safe key generation (using CRYSTALS-Kyber-like approach)
+// Simulate quantum-safe key generation (using lattice-based approach inspired by CRYSTALS-Kyber)
 export async function generateQuantumSafeKey(options: KeyGenerationOptions): Promise<string> {
   // Simulate lattice-based cryptography key generation
   const entropy = new Uint8Array(options.length * 2)
   crypto.getRandomValues(entropy)
   
-  // Apply lattice-based transformations (simplified)
+  // Apply lattice-based transformations (mathematical simulation)
   const latticeMatrix = generateLatticeMatrix(options.entropy)
   const transformedEntropy = applyLatticeTransform(entropy, latticeMatrix)
   
   return bytesToHex(transformedEntropy.slice(0, options.length))
 }
 
-// Simulate AI-generated key using neural network patterns
+// Generate enhanced key using mathematical transformations simulating neural network patterns
 export async function generateNeuralKey(options: KeyGenerationOptions): Promise<string> {
-  // Simulate neural network entropy generation
+  // Use mathematical functions to simulate neural network entropy generation
   const layers = 3
   const neurons = 256
   
   let seed = new Uint8Array(32)
   crypto.getRandomValues(seed)
   
-  // Simulate forward propagation through neural layers
+  // Simulate forward propagation through mathematical layers
   for (let layer = 0; layer < layers; layer++) {
     seed = await simulateNeuralLayer(seed, neurons)
   }
@@ -96,7 +96,7 @@ async function simulateNeuralLayer(input: Uint8Array, _neurons: number): Promise
   for (let i = 0; i < 32; i++) {
     let activation = 0
     for (let j = 0; j < input.length; j++) {
-      const weight = Math.sin(i * j + input[j]) // Simulated weight
+      const weight = Math.sin(i * j + input[j]) // Mathematical weight function
       activation += input[j] * weight
     }
     // Apply activation function (sigmoid-like)

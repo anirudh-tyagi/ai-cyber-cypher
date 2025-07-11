@@ -1,14 +1,21 @@
-# 🔐 CyberCipher - Enhanced Cryptographic Analysis Platform
+# 🔐 CyberCipher - Advanced Cryptographic Analysis- **🔑 Advanced Key Generation**: Cryptographically secure keys with multiple algorithms (Random, Quantum-Safe, Enhanced)
+- **⚡ Multi-Algorithm Cipher Engine**: RC4 and ChaCha20 stream ciphers with real-time processing
+- **🧠 Intelligent Security Analysis**: Context-aware vulnerability detection with Shannon entropy calculation
+- **📊 Interactive Data Visualization**: Dynamic charts for frequency analysis, bit distribution, and security metrics
+- **🎨 Modern UI/UX**: Professional dashboard with dark/light themes and responsive design
+- **🔬 Educational Tools**: Comprehensive cryptographic learning and algorithm comparison features
+- **🌐 Professional API**: RESTful backend for integration with external systemsrm
 
-> **A modern, professional-grade cryptographic analysis and visualization tool designed for security professionals, researchers, and developers.**
+> **A comprehensive cryptographic analysis and visualization platform combining modern web technologies with advanced security analysis capabilities for professionals, researchers, and educators.**
 
 🌐 **[Live Demo on Vercel →](https://cyber-cypher.vercel.app/)**
 
-[![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
-[![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://python.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC.svg)](https://tailwindcss.com/)
+[![React](https://img.shields.io/badge/React-18.2-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Vite](https://img.shields.io/badge/Vite-4.5-646CFF?style=flat-square&logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
 ---
 
@@ -43,16 +50,17 @@
 
 ## 🎯 Overview
 
-CyberCipher is a comprehensive cryptographic analysis platform that combines modern web technologies with advanced cryptographic algorithms. Built with React/TypeScript frontend and FastAPI backend, it provides real-time encryption/decryption, security analysis, and interactive visualizations for understanding cipher behavior and security metrics.
+CyberCipher is a state-of-the-art cryptographic analysis platform that bridges the gap between theoretical cryptography and practical security implementation. Built with React/TypeScript frontend and FastAPI backend, it provides real-time encryption/decryption, comprehensive security analysis, intelligent vulnerability detection, and interactive visualizations for understanding cipher behavior and security metrics.
 
-### ✨ Key Features
+### 🌟 Core Capabilities
 
-- **🔑 Advanced Key Generation** - Cryptographically secure key generation with multiple algorithms
-- **🔒 Multi-Algorithm Cipher Engine** - Support for RC4 and ChaCha20 stream ciphers
-- **🧠 AI-Powered Security Analysis** - Context-aware vulnerability detection and recommendations
-- **� Interactive Visualizations** - Dynamic charts for bit distribution, frequency analysis, and security metrics
-- **🌐 Professional UI/UX** - Modern, responsive dashboard with dark/light theme support
-- **⚡ Real-Time Processing** - Instant encryption/decryption with immediate feedback
+- **🔑 Advanced Key Generation**: Cryptographically secure keys with multiple algorithms (Random, Quantum-Safe, Enhanced)
+- **⚡ Multi-Algorithm Cipher Engine**: RC4 and ChaCha20 stream ciphers with real-time processing
+- **🧠 AI-Powered Security Analysis**: Context-aware vulnerability detection with Shannon entropy calculation
+- **📊 Interactive Data Visualization**: Dynamic charts for frequency analysis, bit distribution, and security metrics
+- **� Modern UI/UX**: Professional dashboard with dark/light themes and responsive design
+- **🔬 Educational Tools**: Comprehensive cryptographic learning and algorithm comparison features
+- **🌐 Professional API**: RESTful backend for integration with external systems
 
 ---
 
@@ -76,8 +84,8 @@ The technical documentation includes:
 
 ### Prerequisites
 
-- **Node.js** 18+ 
-- **Python** 3.13+
+- **Node.js** 18.2+ 
+- **Python** 3.9+ (for backend API)
 - **npm** or **yarn**
 - **Git**
 
@@ -85,250 +93,485 @@ The technical documentation includes:
 
 1. **Clone the Repository**
    ```bash
-   git clone <https://github.com/anirudh-tyagi/cyber-cypher>
+   git clone https://github.com/anirudh-tyagi/ai-cyber-cypher.git
    cd ai-cyber-cypher
    ```
 
-2. **Backend Setup**
-   ```bash
-   # Create Python virtual environment
-   python -m venv cybercypher
-   
-   # Activate virtual environment
-   # macOS/Linux:
-   source cybercypher/bin/activate
-   # Windows:
-   cybercypher\Scripts\activate
-   
-   # Install Python dependencies
-   pip install fastapi uvicorn python-multipart pydantic
-   ```
-
-3. **Frontend Setup**
+2. **Frontend Setup**
    ```bash
    # Install Node.js dependencies
    npm install
    
-   # Install additional packages if needed
-   npm install framer-motion lucide-react recharts react-hot-toast
-   ```
-
-4. **Start the Application**
-   ```bash
-   # Terminal 1: Start Backend (Port 8001)
-   cd backend
-   python main.py
-   
-   # Terminal 2: Start Frontend (Port 3006)
+   # Start development server
    npm run dev
    ```
 
-5. **Access the Application**
-   - **Frontend**: http://localhost:3006
-   - **Backend API**: http://localhost:8001
-   - **API Documentation**: http://localhost:8001/docs
+3. **Backend Setup (Optional - for API features)**
+   ```bash
+   # Navigate to backend directory
+   cd backend
+   
+   # Create and activate virtual environment
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   
+   # Install Python dependencies
+   pip install fastapi uvicorn python-multipart pydantic
+   
+   # Start backend server
+   python main.py
+   ```
+
+4. **Access the Application**
+   - **Frontend**: http://localhost:5173 (Vite dev server)
+   - **Backend API**: http://localhost:8001 (if running)
+   - **API Documentation**: http://localhost:8001/docs (if running)
 
 ---
 
-## 🏢 Application Structure
+## �️ Architecture & Project Structure
 
-### 📁 Frontend Structure (`/src`)
+### 📁 Frontend Architecture (`/src`)
 
 ```
 src/
-├── components/
-│   ├── 🎛️  Dashboard.tsx           # Main dashboard with tab navigation
-│   ├── 🔑 KeyGeneratorPanel.tsx    # Advanced key generation interface
-│   ├── ⚙️  CipherEngine.tsx        # Encryption/decryption operations
-│   ├── 🛡️  SecurityAnalyzer.tsx    # Security analysis tools
+├── components/                     # React Components
+│   ├── 🎛️  Dashboard.tsx           # Main application dashboard
+│   ├── 🔑 KeyGeneratorPanel.tsx    # Cryptographic key generation
+│   ├── ⚙️  CipherEngine.tsx        # Encryption/decryption engine
+│   ├── 🛡️  SecurityAnalyzer.tsx    # Security analysis & vulnerability detection
 │   ├── 📊 AnalysisDashboard.tsx    # Data visualization dashboard
-│   ├── 📈 AnalysisDashboard.tsx # Interactive charts & graphs
-│   ├── 🎨 Header.tsx              # Application header
-│   └── ui/                        # Reusable UI components
-│       ├── Button.tsx
-│       ├── Card.tsx
-│       ├── Input.tsx
-│       ├── Progress.tsx
-│       └── StatCard.tsx
-├── services/
-│   └── 🌐 apiClient.ts            # API communication layer
-├── types/
-│   └── 📋 cipher.ts               # TypeScript type definitions
-│   └── 🔐 cipherAlgorithms.ts     # RC4 and ChaCha20 implementations
-└── utils/
+│   ├── 🎨 Header.tsx              # Application header & navigation
+│   └── ui/                        # Reusable UI Components
+│       ├── Alert.tsx              # Alert notifications
+│       ├── Badge.tsx              # Status badges
+│       ├── Button.tsx             # Interactive buttons
+│       ├── Card.tsx               # Content containers
+│       ├── DecryptedText.tsx      # Decrypted text display
+│       ├── Input.tsx              # Form inputs
+│       ├── ParticlesBackground.tsx # Animated background
+│       ├── Progress.tsx           # Progress indicators
+│       ├── Select.tsx             # Dropdown selectors
+│       ├── StatCard.tsx           # Statistics cards
+│       └── Tabs.tsx               # Tab navigation
+├── services/                      # External Services
+│   ├── 🌐 apiClient.ts            # Backend API communication
+│   └── 🔍 aiSecurityAnalyzer.ts   # Security analysis service
+├── types/                         # TypeScript Definitions
+│   └── 📋 cipher.ts               # Cryptographic type definitions
+└── utils/                         # Utility Functions
+    ├── 🔐 cipherAlgorithms.ts     # RC4 & ChaCha20 implementations
+    ├── 🧠 aiAnalysis.ts           # Statistical analysis utilities
+    ├── 🔑 keyGeneration.ts        # Key generation algorithms
     └── 🔧 cn.ts                   # Utility functions
 ```
 
-### 📁 Backend Structure (`/backend`)
+### 📁 Backend Architecture (`/backend`)
 
 ```
 backend/
 ├── 📄 main.py                     # FastAPI application entry point
-├── 🔐 Key Generation Endpoints    # /keys/generate
-├── ⚙️  Cipher Operation Endpoints  # /cipher/encrypt, /cipher/decrypt
-├── 📊 Analysis Endpoints          # /analysis/analyze
-└── ❤️  Health Check               # /health
+├── app/                           # Application modules
+│   ├── core/                      # Core functionality
+│   │   ├── config.py              # Configuration settings
+│   │   └── security.py            # Security utilities
+│   ├── models/                    # Data models
+│   │   └── schemas.py             # Pydantic schemas
+│   ├── routers/                   # API endpoints
+│   │   ├── analysis.py            # Analysis endpoints
+│   │   ├── cipher.py              # Cipher operations
+│   │   ├── dashboard.py           # Dashboard data
+│   │   └── keys.py                # Key generation endpoints
+│   └── services/                  # Business logic
+│       ├── analysis_service.py    # Analysis operations
+│       ├── cipher_service.py      # Cipher implementations
+│       └── key_service.py         # Key generation service
+└── requirements.txt               # Python dependencies
 ```
+
+### �️ Technology Stack
+
+**Frontend:**
+- **React 18.2** - Modern UI library with hooks
+- **TypeScript 5.2** - Type-safe JavaScript development
+- **Vite 4.5** - Fast build tool and dev server
+- **Tailwind CSS 3.3** - Utility-first CSS framework
+- **Framer Motion** - Animation library
+- **Recharts** - Data visualization charts
+- **Radix UI** - Accessible component primitives
+- **Lucide React** - Beautiful icon library
+
+**Backend:**
+- **FastAPI** - Modern, high-performance Python web framework
+- **Pydantic** - Data validation using Python type annotations
+- **Uvicorn** - ASGI server for production deployment
+
+**Development Tools:**
+- **ESLint** - Code linting and quality assurance
+- **PostCSS** - CSS processing and optimization
+- **TypeScript Compiler** - Type checking and compilation
 
 ---
 
-## 🎛️ Dashboard Components
+## 🎛️ Core Components & Features
 
 ### 1. 🔑 **Key Generator Panel**
 
-**Purpose**: Generate cryptographically secure keys for encryption operations.
+**Advanced cryptographic key generation with multiple security levels:**
 
-**Features**:
-- **Multiple Key Types**: Random, Quantum-Safe, Enhanced
-- **Configurable Length**: 8-512 characters
-- **Entropy Levels**: 128-bit, 256-bit, 512-bit
-- **Character Sets**: Include/exclude symbols
-- **Strength Analysis**: Real-time security assessment
-- **API Integration**: Primary backend generation with local fallback
+**Key Types Available:**
+- **Random**: Standard cryptographically secure random keys
+- **Quantum-Safe**: Post-quantum cryptography inspired keys using lattice-based transformations
+- **Enhanced**: High-entropy keys with additional mathematical transformations
 
-**How It Works**:
+**Configuration Options:**
+- **Length**: 8-512 characters (configurable)
+- **Entropy Levels**: 128-bit, 256-bit, 512-bit security
+- **Character Sets**: Alphanumeric, symbols, custom patterns
+- **Real-time Strength Analysis**: Live security assessment
+- **Hybrid Generation**: API-first with local crypto fallback
+
 ```typescript
-// API-first approach with fallback
-try {
-  const response = await apiClient.generateKey(length, type)
-  // Use API-generated key
-} catch (error) {
-  // Fallback to local crypto.getRandomValues()
-  const localKey = generateLocalKey(options)
+// Example key generation with strength analysis
+const generateSecureKey = async (options: KeyOptions) => {
+  const key = await apiClient.generateKey(options)
+  return {
+    key: key.value,
+    strength: analyzeKeyStrength(key.value),
+    entropy: calculateEntropy(key.value),
+    recommendations: getSecurityRecommendations(key.value)
+  }
 }
 ```
 
 ### 2. ⚙️ **Cipher Engine**
 
-**Purpose**: Perform encryption and decryption operations with multiple algorithms.
+**Multi-algorithm encryption/decryption with real-time processing:**
 
-**Supported Algorithms**:
-- **RC4**: Variable key-size stream cipher (legacy support)
+**Supported Algorithms:**
+- **RC4**: Variable key-size stream cipher
+  - Legacy support for compatibility
+  - Educational analysis of older algorithms
+  - Vulnerability demonstration capabilities
+
 - **ChaCha20**: Modern stream cipher by Daniel J. Bernstein
-  - IETF standard (RFC 8439)
+  - IETF standard (RFC 8439) compliant
   - Constant-time implementation
-  - Excellent performance across platforms
-  - Superior security to legacy algorithms
+  - Superior security and performance
+  - Recommended for production use
 
-**Features**:
-- **Real-time Processing**: Instant encryption/decryption
-- **Algorithm Selection**: Dynamic cipher switching
-- **Mode Support**: Encrypt/Decrypt modes
-- **Input Validation**: Real-time error checking
-- **Output Formatting**: Hex encoding for binary data
+**Engine Features:**
+- **Real-time Processing**: Instant encryption/decryption feedback
+- **Algorithm Comparison**: Side-by-side security analysis
+- **Input Validation**: Comprehensive error checking and sanitization
+- **Output Formatting**: Hex encoding for binary data representation
+- **Performance Metrics**: Speed and efficiency measurements
 
 ### 3. 🛡️ **Security Analyzer**
 
-**Purpose**: Analyze the security characteristics of encrypted and plaintext data.
+**Comprehensive security analysis with intelligent pattern recognition:**
 
-**Analysis Types**:
-- **Entropy Calculation**: Information theory metrics
-- **Pattern Detection**: Repeating sequence identification
-- **Frequency Analysis**: Character distribution analysis
-- **Vulnerability Assessment**: Common weakness detection
-- **Strength Scoring**: Overall security rating
+**Analysis Capabilities:**
+- **Shannon Entropy Calculation**: Information theory metrics for randomness
+- **Pattern Detection**: Identification of repeating sequences and structures
+- **Frequency Analysis**: Character and byte distribution analysis
+- **Vulnerability Assessment**: Common cryptographic weakness detection
+- **Intelligent Predictions**: Context-aware security recommendations
 
-**Metrics Provided**:
+**Security Metrics:**
 ```typescript
-interface AnalysisResults {
-  entropy: number              // Shannon entropy
+interface SecurityAnalysis {
+  entropy: number                    // Shannon entropy (0-8 bits)
   strength: {
-    overall: number           // Combined security score
-    entropy: number          // Entropy component
-    keyStrength: number      // Key quality assessment
-    algorithmStrength: number // Algorithm security rating
+    overall: number                  // Combined security score (0-100)
+    keyStrength: number             // Key quality (35% weight)
+    algorithmStrength: number       // Cipher security (25% weight)
+    implementationStrength: number  // Code quality (25% weight)
+    quantumResistance: number       // Post-quantum security (15% weight)
   }
-  vulnerabilities: string[]   // Identified weaknesses
-  recommendations: string[]   // Security improvements
+  vulnerabilities: string[]          // Identified security weaknesses
+  recommendations: string[]          // Actionable security improvements
+  patterns: PatternAnalysis[]        // Detected patterns and anomalies
 }
 ```
 
+**Analysis Process:**
+1. **Entropy Analysis**: Measures randomness and information content
+2. **Pattern Detection**: Identifies repeating sequences and structures
+3. **Statistical Analysis**: Character frequency and distribution
+4. **Vulnerability Assessment**: Rule-based security weakness identification
+5. **Recommendation Engine**: Actionable security improvements
+
 ### 4. 📊 **Analysis Dashboard**
 
-**Purpose**: Provide comprehensive data visualization and security metrics.
+**Interactive data visualization and comprehensive security metrics:**
 
-**Visualization Components**:
+#### **Visualization Components:**
 
-#### **Character Frequency Analysis**
-- **Type**: Interactive Bar Chart
-- **Data**: Character occurrence distribution
-- **Insights**: Pattern identification, language detection
-- **Features**: Hover tooltips, responsive design
+**Character Frequency Analysis**
+- **Type**: Interactive bar chart with hover details
+- **Purpose**: Pattern identification and language detection
+- **Features**: Real-time updates, theme-aware styling, export capabilities
 
-#### **Entropy Distribution**
-- **Type**: Line Chart
-- **Data**: Entropy variation across text segments
-- **Insights**: Randomness distribution, weak spots
-- **Features**: Real-time updates, trend analysis
+**Entropy Distribution Visualization**
+- **Type**: Dynamic line chart showing entropy variation
+- **Purpose**: Randomness assessment across data segments
+- **Features**: Trend analysis, weak spot identification, statistical overlays
 
-#### **Bit Distribution**
-- **Type**: Enhanced Pie Chart
-- **Data**: Binary bit pattern analysis (Bit 0-7)
-- **Insights**: Byte-level randomness assessment
-- **Features**: External labels, interactive legend
+**Bit Distribution Analysis**
+- **Type**: Enhanced pie chart with external labels
+- **Purpose**: Binary pattern analysis (Bit 0-7 distribution)
+- **Features**: Byte-level randomness assessment, interactive legend
 
-#### **Algorithm Comparison**
-- **Type**: Multi-series Bar Chart
-- **Data**: Security, Performance, Quantum Resistance
-- **Insights**: Algorithm selection guidance
-- **Features**: Comparative analysis, current algorithm highlighting
+**Algorithm Security Comparison**
+- **Type**: Multi-series radar chart
+- **Purpose**: Comparative analysis of cipher algorithms
+- **Metrics**: Security rating, performance, quantum resistance
+- **Features**: Algorithm recommendation engine
 
-#### **Security Metrics Overview**
-- **Type**: Stat Cards Grid
-- **Data**: Key metrics summary
-- **Metrics**: Overall score, entropy, randomness, insights
-- **Features**: Color-coded indicators, trend visualization
+**Security Metrics Overview**
+- **Type**: Responsive stat cards grid
+- **Metrics**: Overall score, entropy level, randomness index, vulnerability count
+- **Features**: Color-coded indicators, trend visualization, alerts
 
 ---
 
-## 🚀 Deployment
+## 🚀 Deployment & Production
 
-### 📂 **GitHub Repository**
+### � **Frontend Deployment (Vercel)**
 
-1. **Initialize Git Repository**
+1. **Automatic Deployment**
    ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: CyberCipher application"
+   # Connect GitHub repository to Vercel
+   # Automatic deployments on push to main branch
    ```
 
-2. **Create GitHub Repository**
-   ```bash
-   # Create repository on GitHub, then:
-   git remote add origin https://github.com/anirudh-tyagi/cybercypher.git
-   git branch -M main
-   git push -u origin main
-   ```
-
-### ⚡ **Vercel Deployment**
-
-1. **Frontend Deployment**
+2. **Manual Deployment**
    ```bash
    # Install Vercel CLI
    npm i -g vercel
    
-   # Deploy to Vercel
+   # Deploy to production
    vercel --prod
    ```
 
-2. **Environment Variables** (Add in Vercel Dashboard)
+3. **Environment Configuration**
    ```env
-   VITE_API_URL=https://your-backend-url.com
+   # Add in Vercel Dashboard
+   VITE_API_URL=https://your-backend-api.com
    NODE_ENV=production
-   ```
-
-3. **Build Configuration** (vercel.json)
-   ```json
-   {
-     "buildCommand": "npm run build",
-     "outputDirectory": "dist",
-     "framework": "vite"
-   }
    ```
 
 ### 🐳 **Backend Deployment Options**
 
-- **Railway**: `railway up`
-- **Render**: Connect GitHub repo
-- **Heroku**: `git push heroku main`
-- **DigitalOcean App Platform**: Connect via GitHub
+**Railway (Recommended)**
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Deploy backend
+cd backend
+railway up
+```
+
+**Render**
+- Connect GitHub repository
+- Auto-deploy on git push
+- Environment variables in dashboard
+
+**Heroku**
+```bash
+# Create Heroku app
+heroku create cybercypher-api
+
+# Deploy
+git subtree push --prefix backend heroku main
+```
+
+**DigitalOcean App Platform**
+- Connect via GitHub integration
+- Automatic builds and deployments
+
+### 🔧 **Build Configuration**
+
+**Frontend (vercel.json)**
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+**Backend Requirements**
+```txt
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+pydantic>=2.4.0
+python-jose[cryptography]>=3.3.0
+```
+
+## 🛡️ Security Considerations
+
+### � **Cryptographic Security**
+- **Secure Random Generation**: Uses `crypto.getRandomValues()` and `secrets` module
+- **Key Management**: No persistent storage of sensitive keys
+- **Memory Safety**: Automatic cleanup of cryptographic materials
+- **Algorithm Selection**: Modern algorithms (ChaCha20) recommended over legacy (RC4)
+
+### 🌐 **Application Security**
+- **Input Validation**: Comprehensive sanitization and validation
+- **CORS Configuration**: Restricted origins for API access
+- **Error Handling**: Secure error messages without information disclosure
+- **Rate Limiting**: Protection against abuse (backend implementation recommended)
+
+### 🔍 **Security Best Practices**
+- **Client-side Processing**: Sensitive operations performed locally when possible
+- **API Security**: Authentication and authorization for production deployments
+- **Data Encryption**: TLS/HTTPS for all communications
+- **Audit Logging**: Track security-relevant operations
+
+---
+
+## 📚 API Documentation
+
+### 🔑 **Key Generation API**
+```typescript
+POST /api/keys/generate
+{
+  "length": 32,
+  "key_type": "quantum-safe",
+  "entropy": 256,
+  "include_symbols": true
+}
+
+Response:
+{
+  "key": "A1B2C3D4E5F6...",
+  "strength": 0.95,
+  "length": 32,
+  "key_type": "quantum-safe"
+}
+```
+
+### 🔐 **Cipher Operations API**
+```typescript
+POST /api/cipher/encrypt
+{
+  "text": "Hello World",
+  "key": "mySecretKey123",
+  "algorithm": "chacha20"
+}
+
+Response:
+{
+  "result": "48656c6c6f20576f726c64",
+  "algorithm": "chacha20",
+  "success": true
+}
+```
+
+### 📊 **Analysis API**
+```typescript
+POST /api/analysis/analyze
+{
+  "text": "encrypted_data_here",
+  "analysis_type": "comprehensive"
+}
+
+Response:
+{
+  "entropy": 7.8,
+  "strength": {
+    "overall": 85,
+    "keyStrength": 90,
+    "algorithmStrength": 85
+  },
+  "vulnerabilities": [],
+  "recommendations": ["Use longer keys", "Consider ChaCha20"]
+}
+```
+
+## 🎓 Educational Use Cases
+
+### 🏫 **Academic Applications**
+- **Cryptography Courses**: Visual demonstration of encryption algorithms
+- **Security Education**: Understanding vulnerability analysis
+- **Research Projects**: Algorithm comparison and analysis
+- **Cybersecurity Training**: Hands-on experience with modern tools
+
+### 💼 **Professional Applications**
+- **Security Auditing**: Cipher identification and analysis
+- **Penetration Testing**: Cryptographic assessment tools
+- **Development**: Integration testing for cryptographic implementations
+- **Consulting**: Client demonstrations and security assessments
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Here's how you can help:
+
+### 🐛 **Bug Reports**
+- Use GitHub Issues to report bugs
+- Include steps to reproduce
+- Provide system information and browser details
+
+### ✨ **Feature Requests**
+- Suggest new algorithms or analysis methods
+- Propose UI/UX improvements
+- Request educational features
+
+### 🔧 **Development Contributions**
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit changes**: `git commit -m 'Add amazing feature'`
+4. **Push to branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+### 📝 **Code Standards**
+- Follow TypeScript/ESLint configurations
+- Write comprehensive tests for new features
+- Update documentation for API changes
+- Follow security best practices
+
+## 🔮 Future Roadmap
+
+### 🚀 **Upcoming Features**
+- **Post-Quantum Cryptography**: Implementation of quantum-resistant algorithms
+- **Advanced Pattern Recognition**: Enhanced statistical analysis methods
+- **3D Visualizations**: Interactive security landscape mapping
+- **Multi-Language Support**: Internationalization for global users
+- **Enterprise Features**: SSO, RBAC, and audit logging
+
+### 🔬 **Research Areas**
+- **Quantum Cryptography**: Integration with quantum key distribution
+- **Homomorphic Encryption**: Privacy-preserving computation analysis
+- **Blockchain Integration**: Cryptocurrency and smart contract security
+- **IoT Security**: Lightweight cryptography for embedded systems
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Daniel J. Bernstein** - ChaCha20 algorithm design
+- **Claude Shannon** - Information theory and entropy concepts
+- **The Cryptography Community** - Continuous research and development
+- **Open Source Contributors** - Libraries and tools that make this possible
+
+## 📞 Contact & Support
+
+- **GitHub Issues**: [Report bugs or request features](https://github.com/anirudh-tyagi/ai-cyber-cypher/issues)
+- **Documentation**: [Technical Documentation](./TECHNICAL_DOCUMENTATION.md)
+- **Live Demo**: [CyberCipher on Vercel](https://cyber-cypher.vercel.app/)
+
+---
+
+<div align="center">
+  <p><strong>Built with ❤️ by security enthusiasts, for the cryptography community</strong></p>
+  <p>⭐ Star this repository if you find it useful!</p>
+</div>

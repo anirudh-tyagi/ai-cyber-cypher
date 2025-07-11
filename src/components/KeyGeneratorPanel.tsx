@@ -186,7 +186,7 @@ const KeyGeneratorPanel: React.FC<KeyGeneratorProps> = ({ onKeyGenerated, curren
             >
               <option value="random">🎲 Cryptographically Random</option>
               <option value="quantum">🔐 Quantum-Safe</option>
-              <option value="neural">🧠 AI-Enhanced</option>
+              <option value="neural">⚡ Enhanced</option>
             </Select>
           </div>
 
